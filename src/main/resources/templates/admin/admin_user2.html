@@ -23,6 +23,8 @@
                 // 첫 페이지 보여주기
                 showPage(currentPage);
 
+                //전체 페이지 / 한페이지에 보여줄 데이터 개수 = 노출 될 페이징 갯수
+
                 // 페이지 링크 만들기
                 var pagerHtml = "";
                 for (var i = 1; i <= totalPage; i++) {
@@ -101,6 +103,11 @@
                 }
             });
         });
+
+        function moreList(){
+
+
+        }
     </script>
 
 
@@ -181,7 +188,7 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item"><a class="page-link" href="#">이전</a></li>
                 <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#" id="addBtn" onclick="moreList();">다음</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="addBtn" onclick="javascript:moreList();">다음</a></li>
             </ul>
         </nav>
     </div>
