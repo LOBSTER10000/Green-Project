@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout.html}">
+      layout:decorate="~{layout/layout.html}" xmlns="http://www.w3.org/1999/html">
 <meta charset="UTF-8">
 <link href="/css/boardDetail.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,8 +53,12 @@
 
                     </tr>
                     </tbody>
+
                 </table>
+
             </div>
+
+
 
             <!-- Comments Form -->
             <div class="card my-4">
@@ -62,14 +66,14 @@
                 <div class="card-body">
                     <form name="comment-form" action="/board/comment/write" method="post" autocomplete="off">
                         <div class="form-group">
-                            <!--                    <input type="hidden" name="com_num" th:value="*{bbs}" />-->
-                            <input type="hidden" name="com_num"/>
-                            <textarea name="content" class="form-control" rows="3"></textarea>
+                            <input type="hidden" name="com_num" th:value="${com_num?.com_num}" />
+                            <textarea name="com_content" class="form-control" rows="3"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary" style="float: right;">Submit</button>
                     </form>
                 </div>
             </div>
+
 
 
             <div class="boxes1" style="float: right; margin-right: 5%;"
@@ -108,16 +112,37 @@
                 </div>
             </div>
 
-
-
-
-            </table>
         </div>
-
 
     </div>
 </div>
-</div>
+
+<script>
+    $(document).ready(function (){
+        selectAllComment();
+    })
+    function selectAllComment(){
+        var com_num = $('input[name=com_num]').val();
+        $.ajax({
+            type: 'GET',
+            url: '/selectAllComment',
+            data : {com_num},
+            success: function(result) {
+                console.log(result);
+                for(var i=0; i<result.length;i++){
+                    var str = "<div class=\"comment\">"
+                    str += result[i].content+"</div><hr>"
+                    $("#comment").append(str);
+                }
+            },
+            error: function(result) {
+            },
+            complete: function () {
+            }
+        })
+    }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous"></script>
