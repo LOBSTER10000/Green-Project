@@ -1,13 +1,15 @@
 package com.sunny.green.vo;
 
+
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.TimeZone;
+
 
 @Data
 @AllArgsConstructor
@@ -40,11 +42,5 @@ public class ExchangeVo {
 
     private UserVo userVo;
 
-    public UserVo getUserVo() {
-        return userVo;
-    }
 
-    public void setUserVo(UserVo userVo) {
-        this.userVo = userVo;
-    }
 }

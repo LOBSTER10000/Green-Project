@@ -24,10 +24,9 @@
 
 
 #greenBox {
-    width: 750px;
+    width: 100%;
     box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
     text-align: center;
-    margin-left: 20%;
 }
 
 .ticket {

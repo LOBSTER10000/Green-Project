@@ -2,38 +2,34 @@ package com.sunny.green.controller;
 
 import com.sunny.green.dao.AdminDao;
 import com.sunny.green.dao.UserDao;
-
-import com.sunny.green.service.UserService;
 import com.sunny.green.vo.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class AdminController {
 
     private final UserDao ud;
-    private final AdminDao ad;
-    private final PageVo pv;
 
-    private UserService userService;
+    private final AdminDao ad;
+
 
     @GetMapping("/admin")
     public String admin() {
@@ -48,7 +44,7 @@ public class AdminController {
                 mo.addAttribute("alert", "관리자용 로그인에 성공했습니다.");
                 mo.addAttribute("url", "/admin/main");
                 session.setAttribute("admin", adminVo);
-                System.out.println(session.getAttribute("admin"));
+                log.info(session.getAttribute("user"));
             } else {
                 mo.addAttribute("alert", "아이디/비밀번호가 일치하지 않습니다.");
                 mo.addAttribute("url", "/admin");
@@ -70,12 +66,12 @@ public class AdminController {
 
     @GetMapping("/admin/reservation")
     public String adminRe() {
-        return "/admin/admin_reservation";
+        return "admin/admin_reservation";
     }
 
     @GetMapping("/admin/user1")
     public String adminUs1() {
-        return "/admin/admin_user1";
+        return "admin/admin_user1";
     }
 
     public String getUserList(Model model) {
@@ -101,7 +97,7 @@ public class AdminController {
     public String userDetail(Model model, UserVo userVo) {
         UserVo user = ud.selectAll1(userVo.getUser_id());
         model.addAttribute("user", user);
-        System.out.println(user);
+        log.info(user);
         return "admin/admin_user3";
     }
 
@@ -118,27 +114,27 @@ public class AdminController {
 
     @GetMapping("admin/delete")
     public String deleteUser(@RequestParam("user_id") String user_id) {
-        System.out.println("번호 :" + user_id);
+        log.info("번호 :" + user_id);
         int deleteUser = ud.deleteId(user_id);
-        System.out.println(deleteUser);
-        return "redirect:/admin/user2";
+        log.info(deleteUser);
+        return "redirect:admin/user2";
     }
 
     @GetMapping("/admin/bbs1")
     public String bbs1() {
-        return "/admin/admin_bbs1";
+        return "admin/admin_bbs1";
     }
 
     @GetMapping("/admin/bbs2")
     public String bbs2() {
-        return "/admin/admin_bbs2";
+        return "admin/admin_bbs2";
     }
 
     @GetMapping("admin/product1")
     public String pro1(Model mo) {
         List<ProductVo> product = ad.selectProAll();
         mo.addAttribute("product", product);
-        return "/admin/admin_product1";
+        return "admin/admin_product1";
     }
 
     @GetMapping("admin/product2")
@@ -147,34 +143,34 @@ public class AdminController {
         ProImgVo proImgVo = ad.selectImg(iv.getPro_num());
         mo.addAttribute("product", product);
         mo.addAttribute("proImgVo", proImgVo);
-        return "/admin/admin_product2";
+        return "admin/admin_product2";
     }
 
     @GetMapping("admin/product3")
     public String pro3() {
 
 
-        return "/admin/admin_product3";
+        return "admin/admin_product3";
     }
 
     @GetMapping("admin/deletePro")
     public String deletePro(int pro_num) {
         int otr = ad.deletePro_img(pro_num);
         int str = ad.deletePro(pro_num);
-        return "redirect:/admin";
+        return "redirect:admin";
     }
 
     @GetMapping("admin/product4")
     public String pro5(ProductVo productVo, Model mo) {
         ProductVo pro = ad.selectPro(productVo.getPro_num());
         mo.addAttribute("pro", pro);
-        return "/admin/admin_product4";
+        return "admin/admin_product4";
     }
 
     @PostMapping("/updatePro")
     public String pro6(ProductVo productVo) {
         int str = ad.updatePro(productVo);
-        return "redirect:/admin/product1";
+        return "redirect:admin/product1";
     }
 
 
@@ -182,32 +178,28 @@ public class AdminController {
     @PostMapping("/product3")
     public String pro4(ProductVo productVo, @RequestParam("image") MultipartFile imageFile) {
         String fileName = imageFile.getOriginalFilename(); // 파일 이름 추출
-        String uploadPath = "src/main/resources/static/img/product/"; // 업로드 디렉토리 경로
+        String uploadPath = "/home/ubuntu/greentopia/img/product/"; // 업로드 디렉토리 경로
         String filePath = uploadPath + fileName; // 저장될 파일 경로
         String uuid = UUID.randomUUID().toString();
         String realPath = uploadPath + uuid + fileName;
         String saveFile = uuid + fileName;
-        System.out.println(fileName);
-        System.out.println(filePath);
-        System.out.println(realPath);
         ad.insertPro(productVo);
         String str = String.valueOf(productVo);
-        System.out.println(str);
+        log.info(str);
 
         try (OutputStream os = new FileOutputStream(realPath)) {
             os.write(imageFile.getBytes());
 
-            ProImgVo proImgVo = ProImgVo.builder()
-                    .pro_num(productVo.getPro_num())
-                    .pro_img_save_name(saveFile)
-                    .pro_img_path(realPath)
-                    .build();
+            ProImgVo proImgVo = new ProImgVo();
+            proImgVo.setPro_num(productVo.getPro_num());
+            proImgVo.setPro_img_save_name(saveFile);
+            proImgVo.setPro_img_path(realPath);
             ad.insertProImg(proImgVo);
         } catch (IOException e) {
             // 파일 저장 실패 시 예외 처리
             e.printStackTrace();
         }
-        return "redirect:/admin";
+        return "redirect:admin";
     }
 
 }

@@ -3,10 +3,12 @@ package com.sunny.green.dao;
 import com.sunny.green.vo.ExchangeVo;
 import com.sunny.green.vo.ProductWithImgVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Mapper
+@Repository
 public interface ExchangeDao {
 
     public List<ProductWithImgVo> selectProductAll();

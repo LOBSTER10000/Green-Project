@@ -5,10 +5,12 @@ import com.sunny.green.vo.PickupPageVo;
 import com.sunny.green.vo.ProImgVo;
 import com.sunny.green.vo.ProductVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Mapper
+@Repository
 public interface AdminDao {
     public int insertPro(ProductVo pro);
 

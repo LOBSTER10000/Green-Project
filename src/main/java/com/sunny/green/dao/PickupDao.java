@@ -5,8 +5,10 @@ import com.sunny.green.vo.PickupCategoryVo;
 import com.sunny.green.vo.PickupImgVo;
 import com.sunny.green.vo.PickupInfoVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 @Mapper
+@Repository
 public interface PickupDao {
 
 

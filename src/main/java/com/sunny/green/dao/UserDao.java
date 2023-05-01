@@ -3,10 +3,12 @@ package com.sunny.green.dao;
 import com.sunny.green.vo.PageVo;
 import com.sunny.green.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Mapper
+@Repository
 public interface UserDao {
 
     public int joinUser(UserVo user);

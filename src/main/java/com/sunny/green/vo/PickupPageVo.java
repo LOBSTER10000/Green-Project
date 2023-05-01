@@ -1,5 +1,6 @@
 package com.sunny.green.vo;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,6 @@ public class PickupPageVo {
     String pu_day;
     String pu_img;
     String pu_memo;
+
+
 }

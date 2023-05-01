@@ -1,5 +1,6 @@
 package com.sunny.green.vo;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,11 +28,5 @@ public class ProductVo {
 
     private ProImgVo proImgVo;
 
-    public ProImgVo getProImgVo() {
-        return proImgVo;
-    }
 
-    public void setProImgVo(ProImgVo proImgVo) {
-        this.proImgVo = proImgVo;
-    }
 }

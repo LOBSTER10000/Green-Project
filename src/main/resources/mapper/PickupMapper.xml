@@ -13,7 +13,7 @@
     </insert>
     <insert id="pickupInfoSave" useGeneratedKeys="true" keyProperty="pu_no">
         Insert into pickup_info(pu_address_no, user_id, house_no, pu_elevator, pu_day, pu_img, pu_memo)
-        values (#{pu_address_no}, #{user_id}, #{house_no}, #{pu_elevator}, #{pu_day}, #{pu_img}, #{pu_memo})
+        values (#{pu_address_no}, #{user_id}, #{house_no}, #{pu_elevator}, #{pu_day}, #{pu_img}, #{text_memo})
         <selectKey keyProperty="pu_no" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID();
         </selectKey>

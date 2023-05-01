@@ -3,44 +3,43 @@ package com.sunny.green.controller;
 import com.sunny.green.dao.*;
 import com.sunny.green.vo.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class UserController {
 
-    private final UserDao ud;
-    private final AdminDao ad;
+    private  final UserDao ud;
+
+
+    private  final AdminDao ad;
+
+
     private final ExchangeDao ed;
 
 //    private final MailService ms;
 
+
     private final MailDao md;
+
 
     private final ProfileImgDao pid;
 
@@ -60,7 +59,7 @@ public class UserController {
             return "myPage/myPage";
         }
 
-        return "/alert";
+        return "alert";
     }
 
     //로그인 창에 들어갈때 쓰는 매핑
@@ -79,7 +78,7 @@ public class UserController {
     @PostMapping("/login")
     public String login1(UserVo user, HttpSession session, Model model) {
         UserVo userDB = ud.selectUser(user);
-        System.out.println(userDB);
+        log.info(userDB);
 
         if (userDB != null) {
             System.out.println(userDB);
@@ -92,7 +91,7 @@ public class UserController {
             model.addAttribute("url", "/login");
         }
 
-        return "/alert";
+        return "alert";
     }
 
 
@@ -103,9 +102,9 @@ public class UserController {
             model.addAttribute("alert", "이미 로그인이 된 상태입니다.");
             model.addAttribute("url", "/index");
         } else {
-            return "/user/join";
+            return "user/join";
         }
-        return "/alert";
+        return "alert";
     }
 
     //회원가입 기능
@@ -123,7 +122,7 @@ public class UserController {
             model.addAttribute("url", "/index");
             session.setAttribute("user", user);
         }
-        return "/alert";
+        return "alert";
     }
 
     @GetMapping("/breakDown")
@@ -136,10 +135,12 @@ public class UserController {
             mo.addAttribute("user", userDB);
             List<ExchangeVo> ex = ed.selectExchangeId(userDB.getUser_id());
             mo.addAttribute("ex", ex);
-            return "/myPage/breakDown";
+            ProfileImgVo profileImgVo = pid.selectProfileImg(userDB.getUser_id());
+            mo.addAttribute("profileImgVo", profileImgVo);
+            return "myPage/breakDown";
         }
 
-        return "/alert";
+        return "alert";
     }
 
     //로그아웃 기능
@@ -153,7 +154,7 @@ public class UserController {
             mo.addAttribute("alert", "로그아웃되었습니다.");
             mo.addAttribute("url", "/index");
         }
-        return "/alert";
+        return "alert";
     }
 
     //회원가입시 아이디 중복 체크
@@ -178,12 +179,14 @@ public class UserController {
         } else {
             UserVo user = (UserVo) session.getAttribute("user");
             UserVo user1 = ud.selectAll1(user.getUser_id());
-            System.out.println("번호는 뭘까요? : " + user1);
+            log.info("번호는 뭘까요? : " + user1);
+            ProfileImgVo profileImgVo = pid.selectProfileImg(user.getUser_id());
+            model.addAttribute("profileImgVo", profileImgVo);
             model.addAttribute("user", user1);
             model.addAttribute("aaa", "bbb");
-            return "/myPage/modify";
+            return "myPage/modify";
         }
-        return "/alert";
+        return "alert";
     }
 
     @PostMapping("/modify")
@@ -211,31 +214,23 @@ public class UserController {
             UserVo userDB = (UserVo) session.getAttribute("user");
             UserVo user1 = ud.selectAll1(userDB.getUser_id());
             mo.addAttribute("user", user1);
+            ProfileImgVo profileImgVo = pid.selectProfileImg(userDB.getUser_id());
+            mo.addAttribute("profileImgVo", profileImgVo);
             return "/myPage/greenPoint";
         }
 
-        return "/alert";
+        return "alert";
     }
 
     @GetMapping("/delete")
     public String delete(HttpSession session, String user_id) {
         UserVo userDB = (UserVo) session.getAttribute("user");
         user_id = userDB.getUser_id();
-        System.out.println(user_id);
+        log.info(user_id);
         int delete = ud.deleteId(user_id);
-        System.out.println(delete);
+        log.info(delete);
         session.setAttribute("user", null);
-        return "redirect:/index";
-    }
-
-
-    @GetMapping("testGuest")
-    public String user1() {
-        for (int i = 100; i < 250; i++) {
-            UserVo user = UserVo.builder().user_id("test" + i).user_pass("1234").user_email("d@c.com").user_name("관리자" + i).user_tel("01012345678").build();
-            ud.joinUser(user);
-        }
-        return "테스트 계정에 대한 내용";
+        return "redirect:index";
     }
 
     @GetMapping("/info")
@@ -248,7 +243,7 @@ public class UserController {
     @PostMapping("/uploadProfile")
     public String pro4(ProductVo productVo, @RequestParam("file") MultipartFile imageFile, HttpSession session) {
         String fileName = imageFile.getOriginalFilename(); // 파일 이름 추출
-        String uploadPath = "src/main/resources/static/img/profile/"; // 업로드 디렉토리 경로
+        String uploadPath = "/home/ubuntu/greentopia/img/profile/"; // 업로드 디렉토리 경로
         String filePath = uploadPath + fileName; // 저장될 파일 경로
         String uuid = UUID.randomUUID().toString();
         String realPath = uploadPath + uuid + fileName;
@@ -258,23 +253,22 @@ public class UserController {
             os.write(imageFile.getBytes());
 
             UserVo userVo = (UserVo) session.getAttribute("user");
-            ProfileImgVo profileImgVo = ProfileImgVo.builder()
-                    .user_id(userVo.getUser_id())
-                    .img_save_name(saveFile)
-                    .img_path(realPath)
-                    .build();
+            ProfileImgVo profileImgVo = new ProfileImgVo();
+            profileImgVo.setUser_id(userVo.getUser_id());
+            profileImgVo.setImg_save_name(saveFile);
+            profileImgVo.setImg_path(realPath);
             pid.insProfileImg(profileImgVo);
         } catch (IOException e) {
             // 파일 저장 실패 시 예외 처리
             e.printStackTrace();
         }
-        return "redirect:/myPage";
+        return "redirect:myPage";
     }
 
     @GetMapping("/img/profile/{img_save_name}")
     @ResponseBody
     public ResponseEntity<Resource> getImage(@PathVariable("img_save_name") String imgSaveName) throws IOException {
-        Resource resource = new FileSystemResource("src/main/resources/static/img/profile/" + imgSaveName);
+        Resource resource = new FileSystemResource("/home/ubuntu/greentopia/img/profile/" + imgSaveName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 

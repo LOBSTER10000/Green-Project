@@ -1,5 +1,6 @@
 package com.sunny.green.vo;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +26,6 @@ public class PickupInfoVo {
     private String pu_img;
 
     private String text_memo;
+
+
 }

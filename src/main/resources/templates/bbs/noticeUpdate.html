@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}"
+      layout:fragment="content">
+<meta charset="UTF-8">
+<link href="/css/notice.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<body>
+
+<div class="notice-page">
+  <div class="notice">
+    <p style="font-size: 35px; font-family: 'GmarketSansMedium'; font-weight: bold;">공지사항 수정</p>
+  </div>
+
+  <div class="container">
+    <form action="/updateNotice2" method="post">
+      <table th:object="${notice}">
+        <input type="hidden" th:value="${notice.notice_num}" name="notice_num">
+        <tbody>
+        <tr>
+          <th scope="row">No</th>
+          <td th:utext="${notice.notice_num}" th:value="${notice.notice_num}" style="border-bottom: 2px solid #888; border-top: 2px solid black;">
+          </td>
+
+          <th scope="row">등록일</th>
+          <td th:utext="${#temporals.format(notice.notice_date, 'yyyy-MM-dd HH:mm')}" style="border-bottom: 2px solid #888; border-top: 2px solid black;"></td>
+        </tr>
+        <tr>
+          <th scope="row">제목</th>
+          <td><input type="text" th:value="${notice.notice_title}" name="notice_title" style="width: 100%;"></td>
+        </tr>
+        <tr>
+          <th scope="row">내용</th>
+          <td><textarea id="editor" th:value="${notice.notice_content}" th:utext="${notice.notice_content}"
+                        name="notice_content"></textarea></td>
+        </tr>
+        </tbody>
+      </table>
+      <div style="text-align: center;">
+        <a class="btn btn-primary me-md-2" role="button" id="write-article"
+           style="background: #2a6a47; color: white; font-weight: 700;" href="/notice">취소</a>
+        <input type="submit" class="btn btn-primary me-md-2" value="등록"
+                style="background: #2a6a47; color: white; font-weight: 700;">
+      </div>
+    </form>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

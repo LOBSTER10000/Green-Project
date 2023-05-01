@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,4 +18,6 @@ public class CommentVo {
     private LocalDateTime com_date;
     private String user_id;
     private int board_num;
+
+
 }

@@ -20,7 +20,7 @@
     <link href="/css/layout3.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-<header th:replace="/fragment/header"></header>
+<header th:replace="fragment/header"></header>
 
 <div class="container" id="box1"
      style="margin-top: 140px; margin-bottom: 50px; font-family: 'NanumBarunGothic', sans-serif; font-weight:700;">
@@ -28,9 +28,17 @@
 
         <div class="col-md-3">
 
-            <div>
-                <img src="/img/유저.png" style="width: 40%;">
+            <div style=" width: 100%; height: 101px; display: flex; justify-content: center; align-items: center;" th:if="${profileImgVo} != null">
+                <img th:src="@{/img/profile/{img_save_name}(img_save_name=${profileImgVo.img_save_name})}" id="pro_img" style="width: 110px; border-radius: 60%; cursor:pointer;" data-toggle="modal" data-target="#exampleModal"
+                     th:onerror="javascript:this.src='img/유저.png'">
+                <input type="file" id="profile_img" style="display: none;">
             </div>
+
+            <div style=" width: 100%; height: 101px; margin-left: 30%; display: flex; flex-direction: column; align-items: center;" th:if="${profileImgVo} == null">
+                <img src="/img/유저.png" id="pro_img" style="width: 110px; border-radius: 60%; cursor:pointer;" data-toggle="modal" data-target="#exampleModal">
+                <input type="file" id="profile_img" style="display: none;">
+            </div>
+
             <div style="font-size: 25px; letter-spacing: -2px; margin-top: 10px;">
                 <span style="color: black; font-weight: 700;">[[${user.user_id}]]</span>님
                 <a href="/modify"><img src="/img/right-arrow.png" style="width: 15px;"></a>

@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+#box1 {
+
+    box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
+    -webkit-box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
+    -moz-box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
+}
+
+#box2 {
+    text-align: center;
+}
+
+#box2 > div {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#box2 > .col-md-3 {
+    border-right: 1px solid #e6e6e6;
+}
+
+
+/*여기서부터는 본문*/
+
+#greenBox {
+    width: 95%;
+    height: 500px;
+    border: 1px solid #e6e6e6;
+}

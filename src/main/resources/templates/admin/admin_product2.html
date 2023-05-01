@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout2.html}">
+      layout:decorate="~{layout/layout2.html}">
 
 <head>
     <meta charset="UTF-8">
@@ -72,10 +72,10 @@
 
     <div style="display: flex; float: right; margin-right: 40%; margin-top: 5%;">
         <button style="background: #2a722d; border: none; width: 120px; height: 40px;">
-            <a th:href="@{product4(pro_num=${product.pro_num})}"
+            <a th:href="@{/product4(pro_num=${product.pro_num})}"
                style="color: white; font-weight: 700; font-size: 18px;">수정</a></button>
         <button style="background: #2a722d; border: none; margin-left: 10px; width: 120px; height: 40px;">
-            <a id="deletePro" th:href="@{deletePro(pro_num=${product.pro_num})}"
+            <a id="deletePro" th:href="@{/deletePro(pro_num=${product.pro_num})}"
                style="color: white; font-weight: 700; font-size: 18px;">삭제</a></button>
     </div>
 

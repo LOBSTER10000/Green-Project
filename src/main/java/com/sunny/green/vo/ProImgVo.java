@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ProImgVo {
     private int pro_img_no;
@@ -19,4 +19,6 @@ public class ProImgVo {
     private String pro_img_save_name;
 
     private String pro_img_path;
+
+
 }
