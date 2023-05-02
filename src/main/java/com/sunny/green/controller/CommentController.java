@@ -2,8 +2,8 @@ package com.sunny.green.controller;
 
 import com.sunny.green.dao.CommentDao;
 import com.sunny.green.vo.CommentVo;
+import com.sunny.green.vo.UserVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 
 @Controller
+@RequiredArgsConstructor
 public class CommentController {
 
 
@@ -49,15 +51,30 @@ public class CommentController {
         CommentVo com = (CommentVo) session.getAttribute("com_num");
         model.addAttribute("com_num", com);
 
+    @GetMapping("/loadCommentList")
+    public String selectAllComment(CommentVo commentVo, UserVo user, Model model, HttpSession session) {
+        CommentVo com = (CommentVo) session.getAttribute("comment");
+        model.addAttribute("comment", commentVo);
+        model.addAttribute("user", user);
+        List<CommentVo> bbs = cd.selectAllComment();
+        UserVo userVo = (UserVo) session.getAttribute("user");
         return "bbs/boardDetail";
 
     }
 
-    @PostMapping("/board/comment/write")
-    public String selectAllComment(@ModelAttribute CommentVo commentVo, int com_num) {
+    @PostMapping("insertComment.do")
+    public void postComment(CommentVo commentVo, HttpSession session)  {
+        System.out.println("commentVo1>>>>>"+commentVo);
+
+        if (session.getAttribute("user") != null) {
+            UserVo user = (UserVo) session.getAttribute("user");
+            String userId = user.getUser_id();
+            commentVo.setUser_id(userId);
+        }
+        System.out.println("commentVo2>>>>>"+commentVo);
         int insertResult = cd.insertComment(commentVo);
-        String redirect_url = "redirect:boardDetail?board_num="+Integer.toString(com_num);
-        return redirect_url;
+//        String redirect_url = "redirect:/boardDetail?board_num="+Integer.toString(com_num);
+//        return "bbs/boardDetail";
     }
 
 }

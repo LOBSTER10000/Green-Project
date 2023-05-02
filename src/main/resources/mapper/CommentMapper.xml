@@ -16,7 +16,7 @@
 
     <!-- 댓글 등록 -->
     <insert id="insertComment" useGeneratedKeys="true" keyProperty="com_num">
-        insert into comment(com_num, user_id, com_content, com_date) values (#{com_num}, #{user_id}, #{com_content}, NOW())
+        insert into comment(user_id, com_content, com_date, board_num) values (#{user_id}, #{com_content}, NOW(), #{board_num})
     </insert>
 
     <!-- 댓글 수정-->

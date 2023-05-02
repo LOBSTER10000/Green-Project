@@ -1,5 +1,6 @@
 package com.sunny.green.handler;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -8,6 +9,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.*;
 
+@Log4j2
 @Component
 public class ChatHandler extends TextWebSocketHandler {
 
@@ -40,7 +42,7 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         numSet.add(session);
-        System.out.println(session + " 클라이언트 접속");
+        log.info(session + " 클라이언트 접속");
 
     }
 
@@ -48,6 +50,6 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         numSet.remove(session);
-        System.out.println(session + " 클라이언트 접속 해제");
+        log.info(session + " 클라이언트 접속 해제");
     }
 }

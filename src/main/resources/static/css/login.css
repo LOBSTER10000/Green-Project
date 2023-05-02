@@ -38,7 +38,7 @@
     background: #faffbc;
     width: 67%;
     height:40px;
-
+    font-family: NanumBarunGothic, sans-serif;
 }
 
 #userPass{
@@ -47,6 +47,7 @@
     background: #faffbc;
     width: 67%;
     height:40px;
+    font-family: NanumBarunGothic, sans-serif;
 }
 
 .row > div > .container {
