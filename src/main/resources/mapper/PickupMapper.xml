@@ -22,15 +22,9 @@
         Insert into pickup_category(pu_no, category_no, pu_category_count)
         values (#{pu_no}, #{category_no}, #{pu_category_count})
     </insert>
-    <insert id="pickupImgSave" useGeneratedKeys="true" keyProperty="pu_img_no">
-        Insert into pickup_img(pu_img_origin_name, pu_img_save_name, pu_img_path)
-        values (#{pu_img_origin_name}, #{pu_img_save_name}, #{pu_img_path})
-        <selectKey keyProperty="pu_img_no" resultType="int" order="AFTER">
-            SELECT LAST_INSERT_ID();
-        </selectKey>
+    <insert id="pickupImgSave">
+        Insert into pickup_img(pu_no, pu_img_origin_name, pu_img_save_name, pu_img_path)
+        values (#{pu_no}, #{pu_img_origin_name}, #{pu_img_save_name}, #{pu_img_path})
     </insert>
-    <update id="pickupImgUpdate">
-        UPDATE pickup_img set pu_no = #{pu_no} where pu_img_no = #{pu_img_no}
-    </update>
 
 </mapper>

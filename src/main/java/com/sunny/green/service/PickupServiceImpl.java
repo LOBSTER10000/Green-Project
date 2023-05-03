@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -26,9 +27,7 @@ public class PickupServiceImpl implements PickupService {
 
     // pickup 예약 이미지 저장
     @Override
-    public List<Integer> pickupImg(List<MultipartFile> files) {
-
-        List<Integer> list = new ArrayList<Integer>();
+    public int pickupImg(List<MultipartFile> files, int info_no) {
 
         for (MultipartFile file : files) {
 
@@ -39,24 +38,34 @@ public class PickupServiceImpl implements PickupService {
             int result = originalFileName.lastIndexOf(".");
             int length = originalFileName.length();
 
+            Random random = new Random();
+            int randomNo = random.nextInt(10000);
 
             // 기존 파일 확장자
             String extension = originalFileName.substring(result, length);
             String uuid = UUID.randomUUID().toString();
-            String realPath = uuid + "_" + originalFileName;   // 저장 파일 새로운 이름
-            String savePath = pickupImgDir + realPath + extension;  // 저장 파일 경로
+            String realPath = pickupImgDir + uuid + originalFileName;
+            //파일명에 붙는 현재 시간
+            Date currentDate = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd");
+            String nowDate = simpleDateFormat.format(currentDate);
 
-            try (FileOutputStream fos = new FileOutputStream(savePath)) {
+            String newFileName = info_no + "_" + nowDate + "_" + randomNo + extension;  // 저장 파일 새로운 이름
+            String savePath = pickupImgDir + newFileName;  // 저장 파일 경로
+
+            try (FileOutputStream fos = new FileOutputStream(realPath)) {
                 fos.write(file.getBytes());
+                System.out.println(savePath);
+                System.out.println(newFileName);
+                System.out.println(originalFileName);
+                System.out.println(realPath);
                 // ImgVo에 저장
-                PickupImgVo pickupImgVo = PickupImgVo.builder()
-                        .pu_img_origin_name(originalFileName)
-                        .pu_img_save_name(realPath)
-                        .pu_img_path(savePath)
-                        .build();
-                pickupDao.pickupImgSave(pickupImgVo);
-                int pu_img_no = pickupImgVo.getPu_img_no(); // insert 이후 생성된 pu_img_no 값을 얻는다.
-                list.add(pu_img_no); // 반환값을 list에 넣는다.
+                PickupImgVo pickupImgVo = new PickupImgVo();
+                        pickupImgVo.setPu_no(info_no);
+                        pickupImgVo.setPu_img_origin_name(originalFileName);
+                        pickupImgVo.setPu_img_save_name(newFileName);
+                        pickupImgVo.setPu_img_path(savePath);
+                pickupDao.pickupImgSave(pickupImgVo);   // DB에 이미지 저장
             } catch (IOException e) {
                 // 파일 저장 실패 시 예외 처리
                 e.printStackTrace();
@@ -64,33 +73,20 @@ public class PickupServiceImpl implements PickupService {
             }
         }
 
-        return list;
-    }
-
-    @Override
-    public int pickupImgInfoNo(List<Integer> imgNo, int infoNo) {
-        int imgResult = 0;
-        for (int aa : imgNo) {
-            PickupImgVo pickupImgVo1 = PickupImgVo.builder()
-                    .pu_img_no(aa)
-                    .pu_no(infoNo)
-                    .build();
-            imgResult = pickupDao.pickupImgUpdate(pickupImgVo1);
-        }
-        return imgResult;
+        return 1;
     }
 
     // address 테이블에 pickup정보 저장
     @Override
     public int pickupAddress(PickupAddressVo pickupAddressVo) {
-        int addressResult = pickupDao.pickupAddressSave(pickupAddressVo);
-        return addressResult;
+        int result = pickupDao.pickupAddressSave(pickupAddressVo);
+        return result;
     }
 
     // info 테이블에 pickup정보 저장
     @Override
     public int pickupInfo(PickupInfoVo pickupInfoVo) {
-        int infoResult = pickupDao.pickupInfoSave(pickupInfoVo);
-        return infoResult;
+        int result = pickupDao.pickupInfoSave(pickupInfoVo);
+        return result;
     }
 }

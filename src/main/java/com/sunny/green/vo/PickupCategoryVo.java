@@ -14,4 +14,6 @@ public class PickupCategoryVo {
     private int pu_no;
     private int category_no;
     private int pu_category_count;
+
+
 }
