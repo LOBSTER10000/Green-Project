@@ -18,6 +18,4 @@ public class ProfileImgVo {
     private String img_save_name;
 
     private String img_path;
-
-
 }

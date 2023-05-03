@@ -35,12 +35,12 @@
 
             <div class="product1">
                 <div class="container">
-                    <div class="row" style="text-align: center; justify-content: center;">
+                    <div class="row" style="text-align: center;">
 
                         <div class="card" style="width: 360px; margin-right: 9px; margin-top: 10px;" th:each="list : ${pv}">
                             <a href="#"><img th:src="@{/img/product/__${list.pro_img_save_name}__}" class="card-img-top" alt="..." style="width: 100%; height:300px;"></a>
                             <div class="card-body">
-                                <h4 class="card-title"><a th:href="@{/exchange2(pro_num=${list.pro_num})}" th:text="${list.pro_name}">스타벅스 1만원권</a></h4>
+                                <h4 class="card-title"><a th:href="@{exchange2(pro_num=${list.pro_num})}" th:text="${list.pro_name}">스타벅스 1만원권</a></h4>
                                 <h6 class="card-subtitle mb-2 text-muted">모바일 상품권</h6>
                                 <p class="card-text" style="font-weight: 700;">기간 : 무제한</p>
                                 <p style="color: red; font-weight: 700;">그린포인트 : [[${list.pro_point}]]p</p>

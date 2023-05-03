@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,6 +30,4 @@ public class ProductWithImgVo {
     private String pro_img_save_name;
 
     private String pro_img_path;
-
-
 }

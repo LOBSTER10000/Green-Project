@@ -5,7 +5,6 @@ import com.sunny.green.vo.PickupAddressVo;
 import com.sunny.green.vo.PickupImgVo;
 import com.sunny.green.vo.PickupInfoVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +16,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class PickupServiceImpl implements PickupService {
-
 
     private final PickupDao pickupDao;
 

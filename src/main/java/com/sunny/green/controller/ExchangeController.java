@@ -4,12 +4,15 @@ import com.sunny.green.dao.AdminDao;
 import com.sunny.green.dao.ExchangeDao;
 import com.sunny.green.dao.MailDao;
 import com.sunny.green.dao.UserDao;
+
+
+
 import com.sunny.green.vo.ExchangeVo;
+
+import com.sunny.green.vo.MailVo;
 import com.sunny.green.vo.ProductWithImgVo;
 import com.sunny.green.vo.UserVo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +27,9 @@ import java.util.Random;
 
 @Controller
 @RequiredArgsConstructor
-@Log4j2
 public class ExchangeController {
-
-
     private final AdminDao ad;
-
     private final UserDao ud;
-
     private final ExchangeDao ed;
 
 //    private final MailService ms;
@@ -47,21 +45,21 @@ public class ExchangeController {
         } else {
             List<ProductWithImgVo> pv = ed.selectProductAll();
             mo.addAttribute("pv", pv);
-            return "exchange/exchange1";
+            return "/exchange/exchange1";
         }
-        return "alert";
+        return "/alert";
     }
 
     @GetMapping("/exchange2")
     public String exchange(HttpSession httpSession, Model mo, ProductWithImgVo productWithImgVo) {
         ProductWithImgVo pro = ed.selectProOne(productWithImgVo.getPro_num());
         mo.addAttribute("pro", pro);
-        log.info(pro);
+        System.out.println(pro);
         UserVo uservo = (UserVo) httpSession.getAttribute("user");
         UserVo user = ud.selectAll1(uservo.getUser_id());
         mo.addAttribute("user", user);
-        log.info("왜 변화가 안되는 것인가" + user);
-        return "exchange/exchange2";
+        System.out.println("왜 변화가 안되는 것인가" + user);
+        return "/exchange/exchange2";
     }
 
     @PostMapping("/exchange")
@@ -77,17 +75,17 @@ public class ExchangeController {
             reservationId.append(chars.charAt(index));
         }
 
-        log.info("코드 번호 :" + reservationId);
+        System.out.println("코드 번호 :" + reservationId);
         ev.setEx_uuid_num(String.valueOf(reservationId));
 
         int result = ed.insertExchange(ev);
-        log.info("저장됨?" + result);
+        System.out.println("저장됨?" + result);
 
 
         int remain_point = ev.getRemain_point();
         user.setUser_point(remain_point);
         ud.updatePoint(user);
-        log.info("유저 포인트값 :" + remain_point);
+        System.out.println("유저 포인트값 :" + remain_point);
 
 //       MailVo mailVo = new MailVo();
 //        mailVo.setMail_receiver(ev.getUser_email());
@@ -97,7 +95,7 @@ public class ExchangeController {
 //        md.insertMail(mailVo);
 
         redirectAttributes.addAttribute("ex_num", ev.getEx_num());
-        return "redirect:exchange3";
+        return "redirect:/exchange3";
     }
 
     @GetMapping("/exchange3")
@@ -106,7 +104,7 @@ public class ExchangeController {
 
         ExchangeVo ev = ed.selectExchangeOne(ex_num);
         mo.addAttribute("ev", ev);
-        return "exchange/exchange3";
+        return "/exchange/exchange3";
     }
 
 

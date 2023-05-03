@@ -1,6 +1,5 @@
 package com.sunny.green.vo;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +18,4 @@ public class AdminVo {
     private String user_pass;
 
     private int admin_role;
-
-
 }

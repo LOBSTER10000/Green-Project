@@ -1,10 +1,6 @@
 package com.sunny.green.vo;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +24,5 @@ public class PickupAddressVo {
     private String pu_address3;
 
     private String pu_address4;
-
-
 
 }

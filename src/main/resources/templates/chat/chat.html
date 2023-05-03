@@ -25,9 +25,9 @@
     console.log($);
 
     //const는 상수 선언, 변경이 불가하다
-    let cur_session = [[${session.user.user_id}]];
+    let cur_session = [[${session.user.user_name}]];
 
-    let user_id= cur_session;
+    let user_name= cur_session;
 
     $(function () {
         const websocket = new WebSocket("ws://localhost:8080/ws/chat");
@@ -49,26 +49,26 @@
         });
 
         function send() {
-            console.log(user_id + ":" + $("#input").text());
+            console.log(user_name + ":" + $("#input").text());
             if ($("#input").text() !== "") {
-                websocket.send(user_id + ":" + $("#input").text());
+                websocket.send(user_name + ":" + $("#input").text());
                 $("#input").text('');
             }
         }
 
         function onOpen(evt) {
-            let str = user_id + ": 님이 입장했습니다."
+            let str = user_name + ": 님이 입장했습니다."
             websocket.send(str);
         }
 
         function onClose(evt) {
-            let str = user_id + ": 님이 퇴장했습니다."
+            let str = user_name + ": 님이 퇴장했습니다."
             websocket.send(str);
         }
 
         function onMessage(msg) {
             let data = msg.data;
-            let user_id = null; // 데이터를 보낸 사람
+            let user_name = null; // 데이터를 보낸 사람
             let message = null;
             let arr = data.split(":");
 
@@ -80,7 +80,7 @@
             console.log("현재 로그인한 사용자 : " + cur_session);
 
             // 웹소켓에서 받은 데이터를 : 로 구분해서 나눈 후 파싱
-            user_id = arr[0].trim();
+            user_name = arr[0].trim();
 
             if (arr[1] === undefined) {
                 message = '';
@@ -89,14 +89,14 @@
             }
 
             if (message == "님이 입장했습니다.") {
-                message = user_id + "님이 입장했습니다.";
+                message = user_name + "님이 입장했습니다.";
             }
 
             if (message == undefined) {
                 message = "채팅이 종료되었습니다.";
             }
 
-            if (cur_session && user_id === cur_session) {
+            if (cur_session && user_name === cur_session) {
                 // 현재 세션의 사용자가 보낸 메시지인 경우
                 let str = "<li class='self'>";
                 str += message;

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
 @RequiredArgsConstructor
+@Controller
 public class ChatController {
 
     private final UserDao ud;

@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout.html}" xmlns="http://www.w3.org/1999/html">
+      layout:decorate="~{layout/layout.html}">
 <meta charset="UTF-8">
 <link href="/css/boardDetail.css" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,51 +53,23 @@
 
                     </tr>
                     </tbody>
-
                 </table>
-
             </div>
-
 
             <!-- Comments Form -->
-            <div id="comment-write" style="padding: 80px;">
-                <div class="card my-4">
-                    <h5 class="card-header">댓글 남기기:</h5>
-                    <div class="card-body">
-                        <form name="comment-form" action="/board/comment/write" method="post" autocomplete="off">
-                            <div class="form-group">
-<!--                                <input type="hidden" name="user_id" th:if="${user?.user_id} != null">-->
-    <!--                            <input type="hidden" name="user_id" th:value="${user.user_id}">-->
-                                <textarea name="com_content" class="form-control" rows="3"></textarea>
-                            </div>
-                            <div style="float: right; margin-top: 1%; margin-right: 10%;">
-                                <input type="submit" value="등록" style="width: 75px; background: #2a6a47; color: white; border: none; font-weight: 700;">
-                            </div>
-                        </form>
-                    </div>
+            <div class="card my-4">
+                <h5 class="card-header">Leave a Comment:</h5>
+                <div class="card-body">
+                    <form name="comment-form" action="/board/comment/write" method="post" autocomplete="off">
+                        <div class="form-group">
+                            <!--                    <input type="hidden" name="com_num" th:value="*{bbs}" />-->
+                            <input type="hidden" name="com_num"/>
+                            <textarea name="content" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="float: right;">Submit</button>
+                    </form>
                 </div>
-
-            <br>
-
-            <!-- 댓글 출력 부분-->
-            <div id="comment-list">
-                <table th:each="comment : ${comment}">
-                    <tr>
-                        <th>댓글번호</th>
-                        <th>작성자</th>
-                        <th>내용</th>
-                        <th>작성시간</th>
-                    </tr>
-                    <tr>
-                        <td th:utext="${comment.com_num}"></td>
-                        <td th:utext="${comment.user_id}"></td>
-                        <td th:utext="${comment.com_content}"></td>
-                        <td th:utext="${#temporals.format(comment.com_date, 'yyyy-MM-dd HH:mm')}"></td>
-                    </tr>
-                </table>
             </div>
-
-            <br><br>
 
 
             <div class="boxes1" style="float: right; margin-right: 5%;"
@@ -136,52 +108,16 @@
                 </div>
             </div>
 
+
+
+
+            </table>
         </div>
+
 
     </div>
 </div>
-
-<script th:inline="javascript">
-
-        const board_num = [[${board_num}]];
-
-        $(document).ready(function () {
-            $('form[name="comment-form"]').submit(function (e) {
-                e.preventDefault();
-
-                const com_content = $(".form-control").val();
-                const list = {board_num, com_content};
-
-                // AJAX 요청
-                $.ajax({
-                    url: 'insertComment.do',
-                    type: 'POST',
-                    data: list,
-                    success: function () {
-                        // 댓글 등록 후, 댓글 목록을 불러오기 위해 새로운 AJAX 요청
-                        $.ajax({
-                            url: '/loadCommentList',
-                            type: 'GET',
-                            success: function (response) {
-                                $('#comment-list').html(response);
-                            },
-                            error: function (error) {
-                                console.error('Error loading comment list:', error);
-                            }
-                        });
-
-                        // 리디렉션 처리
-                        // window.location.href = '/boardDetail?board_num=' + board_num;
-                        window.location.href = '/boardDetail';
-                    },
-                    error: function (error) {
-                        console.error('댓글 등록 오류:', error);
-                    }
-                });
-            });
-        });
-</script>
-
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous"></script>

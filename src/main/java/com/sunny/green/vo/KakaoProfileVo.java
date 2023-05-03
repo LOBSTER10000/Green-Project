@@ -1,15 +1,11 @@
 package com.sunny.green.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import javax.annotation.Generated;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoProfileVo {
 
@@ -18,10 +14,7 @@ public class KakaoProfileVo {
     public Kakao_Account Kakao_account;
     public Properties properties;
 
-
     @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Kakao_Account{
         public String email;
@@ -35,16 +28,12 @@ public class KakaoProfileVo {
          * public Boolean hasBirthday;
          * public Boolean birthdayNeedsAgreement;
          */
-
     };
 
     @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public class Properties{
         public String nickname;
-
     }
 
 }

@@ -31,24 +31,23 @@
                             </div>
                             <div class="ticketContent">
                                 <div class="row">
-                                    <div class="col-2 arrive"
-                                         style="margin-top: 5px; padding-right: 0px; border-right: 1px solid black;
-                                            display: flex; flex-direction: column; justify-content: center;">
+                                    <div class="col-3 arrive"
+                                         style="margin-top: 5px; padding-right: 0px; border-right: 1px solid black;">
                                         <img th:src="@{/img/product/__${list.pro_img_save_name}__}" alt=""
-                                             style="width: 100%;">
+                                             style="width: 65%;">
                                     </div>
-                                    <div class="col-9" style="margin-top: 5px; padding-right: 0px; padding-left: 0px;">
-                                        <table style="width: 100%;">
-                                            <tr style="color: gray; letter-spacing:-1px; font-size: 15px;">
+                                    <div class="col-7" style="margin-top: 5px;">
+                                        <table>
+                                            <tr style="color: gray; letter-spacing:-1px; font-size: 20px;">
                                                 <td>유저 아이디</td>
                                                 <td>교환 물품</td>
                                                 <td>교환 일자</td>
                                             </tr>
-                                            <tr style="font-weight: 700; font-size: 14px;">
+                                            <tr style="font-weight: 700;">
                                                 <td th:utext="${list.user_id}">test1</td>
-                                                <td th:utext="${list.pro_name}" style="font-size: 11px;">배스킨 라빈스</td>
+                                                <td th:utext="${list.pro_name}">배스킨 라빈스</td>
                                                 <td th:utext="${list.ex_date}" style="font-size:10px;">2023-02-24</td>
-                                            <tr style="color: gray; letter-spacing:-1px; font-size: 14px;">
+                                            <tr style="color: gray; letter-spacing:-1px; font-size: 20px;">
                                                 <td>사용 그린포인트</td>
                                                 <td>잔액 그린포인트</td>
                                                 <td>발급 여부</td>
@@ -57,14 +56,12 @@
                                                 <td style="color: dodgerblue;" th:utext="${list.pay_point}">1,600</td>
                                                 <td style="color: dodgerblue;" th:utext="${list.remain_point}">18,650
                                                 </td>
-                                                <td style="color: dodgerblue;">Y</td>
+                                                <td style="color: dodgerblue; text-align: center;">Y</td>
                                             </tr>
                                         </table>
                                     </div>
-                                    <div class="col-1"
-                                         style="padding-left:0px; display: flex; flex-direction: column; justify-content: center;">
-                                        <img src="/img/myPage/qr-code.png" id="qr"
-                                             style="width:20px; height: 20px; margin-top: 0px;">
+                                    <div class="col-2">
+                                        <img src="/img/myPage/qr-code.png" id="qr">
                                     </div>
                                 </div>
                             </div>
