@@ -67,6 +67,18 @@
                       <div id="text_demandSelect">카테고리를 선택해주세요</div>
                       <!--   1차 카테고리 리스트  -->
                       <div class="box_recycleCategory" style="margin-top: 10px; margin-left: 6px;">
+                        <div class="btn_recycleCategory_1st">
+<!--                          <a>-->
+<!--                            <img src="/img/pickup/washing-machine.png" alt="세탁기" >-->
+<!--                          </a>-->
+                        </div>
+                        <div class="btn_recycleCategory_1st"></div>
+                        <div class="btn_recycleCategory_1st"></div>
+                        <div class="btn_recycleCategory_1st"></div>
+                        <div class="btn_recycleCategory_1st"></div>
+                        <div class="btn_recycleCategory_1st"></div>
+                        <div class="btn_recycleCategory_1st"></div>
+
                         <input type="button" class="btn_recycleCategory_1st" id="img_washing">
                         <input type="button" class="btn_recycleCategory_1st" id="img_refrigerator">
                         <input type="button" class="btn_recycleCategory_1st" id="img_television">
@@ -83,7 +95,19 @@
                     </td>
                     <td class="col-9" style="padding: 10px; font-family: NanumBarunGothic, serif;">
                       <!--   2차 카테고리 리스트  -->
-                      <div id="btn_recycleCategory">
+                      <div>
+                        <input type="button" class="btn_recycleCategory_2st" value="일반세탁기">
+                        <input type="button" class="btn_recycleCategory_2st" value="드럼세탁기">
+                        <input type="button" class="btn_recycleCategory_2st" value="탈수기">
+                        <div>[[${param.user_id}]]</div>
+                      </div>
+                      <div style="display: none">
+                        <input type="button" class="btn_recycleCategory_2st" value="가정용냉장고">
+                        <input type="button" class="btn_recycleCategory_2st" value="양문형냉장고">
+                        <input type="button" class="btn_recycleCategory_2st" value="김치냉장고">
+                        <input type="button" class="btn_recycleCategory_2st" value="와인냉장고">
+                        <input type="button" class="btn_recycleCategory_2st" value="쇼케이스">
+                        <input type="button" class="btn_recycleCategory_2st" value="업소용냉장고">
                       </div>
                     </td>
                   </tr>
@@ -105,21 +129,42 @@
             <div class="row">
               <!--  품목 선택 preview 세부 title  -->
               <table style="border: 2px solid #d5d2d2; margin-top: 15px; width: 92%; margin-left: 4%;">
-                <thead>
-                  <tr style="border-bottom: 2px solid #d5d2d2; height: 65px;">
-                    <td class="col-4" style="border-right: 2px solid #d5d2d2">
-                      <div class="text_cateSelectTitle2">상세 분류</div>
-                    </td>
-                    <td class="col-4" style="border-right: 2px solid #d5d2d2">
-                      <div class="text_cateSelectTitle2">수량</div>
-                    </td>
-                    <td class="col-4">
-                      <div class="text_cateSelectTitle2">삭제 여부</div>
-                    </td>
-                  </tr>
-                </thead>
-                <tbody id="preview_row">
-                </tbody>
+                <tr style="border-bottom: 2px solid #d5d2d2; height: 65px;">
+                  <td class="col-3" style="border-right: 2px solid #d5d2d2">
+                    <div class="text_cateSelectTitle2">대분류</div>
+                  </td>
+                  <td class="col-3" style="border-right: 2px solid #d5d2d2">
+                    <div class="text_cateSelectTitle2">소분류</div>
+                  </td>
+                  <td class="col-3" style="border-right: 2px solid #d5d2d2">
+                    <div class="text_cateSelectTitle2">수량</div>
+                  </td>
+                  <td class="col-3">
+                    <div class="text_cateSelectTitle2">삭제 여부</div>
+                  </td>
+                </tr>
+                <tr style="height: 65px;">
+                  <td class="col-3" style="border-right: 2px solid #d5d2d2; font-family: NanumBarunGothic, serif;">
+                    <div class="text_mainCategory_preview">세탁기</div>
+                  </td>
+                  <td class="col-3" style="border-right: 2px solid #d5d2d2; font-family: NanumBarunGothic, serif;">
+                    <div class="text_detailCategory_preview" id="category_no">일반 세탁기</div>
+                  </td>
+                  <td class="col-3" style="border-right: 2px solid #d5d2d2; text-align: center; font-family: NanumBarunGothic, serif;">
+                    <button type="button" class="minus" onclick="fnCalcCnt('minus');">
+                      <div style="width: 100%; height: 100%; position: absolute; top: -20px;">-</div>
+                    </button>
+                    <input type="text" class="count_category" name="item_cnt" title="수량 입력" value="1" maxlength="1">
+                    <button type="button" class="plus" onclick="fnCalcCnt('plus');">
+                      <div style="width: 100%; height: 100%; position: absolute; top: -20px;">+</div>
+                    </button>
+                  </td>
+                  <td class="col-3">
+                    <div class="button_inputCategory_delete">
+                      <input type="button" value="X" style="color: red; border: none; font-size: 28px;">
+                    </div>
+                  </td>
+                </tr>
               </table>
             </div>
           </div>
@@ -127,7 +172,8 @@
           <div class="container">
             <div class="box_pageMove">
               <a href="/pickup" class="btn btn-outline-success">이전</a>
-              <input type="button" class="btn btn-outline-success" value="다음" onclick="return chBox()">
+              <input type="button" class="btn btn-outline-success" value="저장하기" onclick="pickupSave2()">
+              <a href="/pickup3" class="btn btn-outline-success">다음</a>
             </div>
           </div>
       </div>
