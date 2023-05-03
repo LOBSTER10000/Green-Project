@@ -27,12 +27,6 @@
         where user_id = #{user_id}
     </select>
 
-    <!-- 유저 정보 불러오기   -->
-    <select id="selectAll1" resultType="com.sunny.green.vo.UserVo">
-        select *
-        from user
-        where user_id = #{user_id}
-    </select>
 
     <!-- 개인정보 수정   -->
     <update id="updateUser">
