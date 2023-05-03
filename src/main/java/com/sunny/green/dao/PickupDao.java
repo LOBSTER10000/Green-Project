@@ -11,13 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PickupDao {
 
-
     public int pickupAddressSave(PickupAddressVo pickupAddressVo);
     public int pickupInfoSave(PickupInfoVo pickupInfoVo);
     public int pickupCategorySave(PickupCategoryVo pickupCategoryVo);
     public int pickupImgSave(PickupImgVo pickupImgVo);
-
-
-
+    public int pickupImgUpdate(PickupImgVo pickupImgVo);
 
 }
