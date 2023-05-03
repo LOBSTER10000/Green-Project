@@ -7,6 +7,7 @@ import com.sunny.green.vo.PickupAddressVo;
 
 import com.sunny.green.vo.PickupInfoVo;
 import com.sunny.green.vo.UserVo;
+import groovy.util.logging.Log4j2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class PickUpController {
 
     private final PickupServiceImpl pSI;
@@ -28,6 +30,7 @@ public class PickUpController {
     @GetMapping("/pickup")
     public String pickupPage(HttpSession session, Model model) {
         if(session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
             return "pickup/pickUp";
         } else {
             model.addAttribute("alert", "로그인이 필요한 페이지입니다.");
@@ -51,7 +54,10 @@ public class PickUpController {
     @PostMapping("pickupImg.do")
     @ResponseBody
     public void pickupImg(@RequestParam("images") List<MultipartFile> files, HttpSession session) {
-        session.setAttribute("pickupImg", files);
+        List<Integer> imgNo = pSI.pickupImg(files);
+        if (imgNo != null) {
+            session.setAttribute("imgNo", imgNo);
+        }
     }
 
     // 예약 두번째 페이징
@@ -76,14 +82,13 @@ public class PickUpController {
         if(successVal==1) {
             int addressNo = address.getPu_address_no();
             info.setPu_address_no(addressNo);
-            System.out.println("info>>>>>>>>>>>"+info);
             int successVal2 = pSI.pickupInfo(info);
             if(successVal2==1) {
                 int infoNo = info.getPu_no();
                 String imgVal = info.getPu_img();
                 if(Objects.equals(imgVal, "Y")) {
-                    List<MultipartFile> pickupImg = (List<MultipartFile>) session.getAttribute("pickupImg");
-                    int successVal3 = pSI.pickupImg(pickupImg, infoNo);
+                    List<Integer> imgNo = (List<Integer>) session.getAttribute("imgNo");
+                    int successVal3 = pSI.pickupImgInfoNo(imgNo, infoNo);
                 }
             }
         }

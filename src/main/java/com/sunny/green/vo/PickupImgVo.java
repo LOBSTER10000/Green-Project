@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class PickupImgVo {
     private int pu_no;
+    private int pu_img_no;
     private String pu_img_origin_name;
     private String pu_img_save_name;
     private String pu_img_path;
 
-
 }
+
+
