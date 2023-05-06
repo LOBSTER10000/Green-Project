@@ -49,8 +49,8 @@
         <!--   개인정보 동의   -->
         <div class="container" style="margin-bottom: 10px;">
           <div class="box_checkBox">
-            <div style="display:flex; align-items: center;">
-              <input id="checkBox_colPersonInfo" type="checkbox" name="permission_check" value="개인정보 제공 동의" onclick="getCheckboxValue()">
+            <div style="display:flex; align-items: center; margin-right: 10px;">
+              <input id="checkBox_colPersonInfo" type="checkbox" name="permission_check"/>
             </div>
             <div id="text_checkBox">개인정보 제공 동의</div>
             <div id="text_checkBox2">(필수)</div>
@@ -98,236 +98,132 @@
           <div class="line_boundary"></div>
         </div>
         <!--   개인정보 입력칸  -->
-        <div class="container">
-          <!--   개인정보 입력 title -->
-          <div id="box_contentTitle">
-            <div style="margin-left: 2%">
-              <div id="text_contentTitle">고객정보 입력</div>
+          <div class="container">
+            <!--   개인정보 입력 title -->
+            <div id="box_contentTitle">
+              <div style="margin-left: 2%">
+                <div id="text_contentTitle">고객정보 입력</div>
+              </div>
+              <div id="box_radio">
+                <input type="radio" name="pickup_info" value="기존 고객정보" checked="checked" style="margin-right: 10px;" /> 기존 고객정보
+                <input type="radio" name="pickup_info" value="새로운 정보 입력" style="margin-right: 10px; margin-left: 20px;" /> 새로운 정보 입력
+              </div>
             </div>
-            <div id="box_radio">
-              <input type="radio" name="pickup_info" value="기존 고객정보" checked="checked" style="margin-right: 10px;" /> 기존 고객정보
-              <input type="radio" name="pickup_info" value="새로운 정보 입력" style="margin-right: 10px; margin-left: 20px;" /> 새로운 정보 입력
-            </div>
-          </div>
-          <!--   개인정보 입력 본문  -->
-          <div class="row" style="color: black; width: 92%; margin-left: 5%;">
-            <!--   기존 유저정보  -->
-            <table>
-              <!--   접수자명  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 28px;">
-                  <span class="text_contentHeader">접수자명</span>
-                  <span class="text_requiredInput">*</span>
-                </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <input type="text" id="pickup_userID" th:value="${session.user.user_id}" style="display: none">
-                  <input type="text" id="pickup_name" placeholder="이름 입력" th:value="${session.user.user_name}" style="width: 300px; height: 40px; margin-left: 20px;">
-                </td>
-              </tr>
-              <!--   전화번호  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 28px;">
-                  <span class="text_contentHeader">전화번호</span>
-                  <span class="text_requiredInput">*</span>
-                </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <input type="text" id="pickup_tel" placeholder="전화번호 입력(- 제외)" th:value="${session.user.user_tel}" style="width: 300px; height: 40px; margin-left: 20px; font-size: 20px;">
-                </td>
-              </tr>
-              <!--   배출 주소  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
-                  <span class="text_contentHeader">배출 주소</span>
-                  <span class="text_requiredInput">*</span>
-                </td>
-                <td class="col-10 box_address" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif; font-size: 16px;">
-                  <input type="text" id="pickup_zip_code" placeholder="우편번호" th:value="${session.user.zip_code}"><br>
-                  <input type="text" id="pickup_address1" placeholder="도로명주소" th:value="${session.user.address1}">
-                  <input type="text" id="pickup_address2" placeholder="지번주소" th:value="${session.user.address2}"><br>
-                  <span style="color:#999;display:none"></span>
-                  <input type="text" id="pickup_address3" placeholder="상세주소" th:value="${session.user.address3}">
-                  <input type="text" id="pickup_address4" placeholder="참고항목" th:value="${session.user.address4}">
-                </td>
-              </tr>
-              <!--   주거 구분  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 30px;">
-                  <div class="text_contentHeader">주거 구분</div>
-                </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <div style="display:flex; margin-left: 20px; font-size: 18px;">
-                    <div>주거형태</div>
-                    <select id="pickup_house" title="주거형태 선택" style="margin-left: 10px; margin-right: 20px;">
-                      <option value>주거형태</option>
-                      <option value="1">단층주택</option>
-                      <option value="2">연립주택</option>
-                      <option value="3">아파트</option>
-                      <option value="4">빌딩</option>
-                    </select>
-                    <div>엘레베이터 유무</div>
-                    <select id="pickup_elevator" title="엘레베이터유무 선택" style="margin-left: 10px; margin-right: 20px;">
-                      <option value>유무 선택</option>
-                      <option value="Y">유</option>
-                      <option value="N">무</option>
-                    </select>
-                  </div>
-                </td>
-              </tr>
-              <!--   배출 희망일  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 20px;">
-                  <span class="text_contentHeader">배출<br>희망일</span>
-                  <span class="text_requiredInput">*</span>
-                </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <div style="display:flex; margin-left: 20px;">
-                    <span style="font-size: 20px;">지정일:
-                      <input type="text" id="myDateInput">
-                    </span>
-                    <span id="text_insertDayOfWeek">(-)</span>
-                    <span id="text_dayOfWeek">요일</span>
-                  </div>
-                </td>
-              </tr>
-              <!--   참고 사진  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
-                  <div class="text_contentHeader">참고 사진</div>
-                </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <div style="display:flex; margin-left: 20px;">
-                    <input name="pickup_photo" type="file" id="img_pickup_upload" accept="image/*" required multiple />
-                  </div>
-                  <div>
-                    <ul id="img_pickup_preview"></ul>
-                  </div>
-                </td>
-              </tr>
-              <!--   메모  -->
-              <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
-                  <div class="text_contentHeader">메모</div>
-                </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif;">
-                  <div style="display:flex;">
-                    <textarea class="text_memo" name="pickup_memo"></textarea>
-                  </div>
-                </td>
-              </tr>
-            </table>
+            <!--   개인정보 입력 본문  -->
+            <div class="row" style="color: black; width: 92%; margin-left: 5%;">
+              <!--   기존 유저정보  -->
+              <table>
+                <!--   접수자명  -->
+                <tr>
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 28px;">
+                    <span class="text_contentHeader">접수자명</span>
+                    <span class="text_requiredInput">*</span>
+                  </td>
+                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
+                    <input type="text" id="pickup_userID" name="user_id" th:value="${session.user.user_id}" style="display: none">
+                    <input type="text" id="pickup_name" name="pickup_name" placeholder="이름 입력" th:value="${session.user.user_name}" style="width: 300px; height: 40px; margin-left: 20px;">
+                  </td>
+                </tr>
+                <!--   전화번호  -->
+                <tr>
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 28px;">
+                    <span class="text_contentHeader">전화번호</span>
+                    <span class="text_requiredInput">*</span>
+                  </td>
+                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
+                    <input type="text" id="pickup_tel" name="pickup_tel" placeholder="전화번호 입력(- 제외)" th:value="${session.user.user_tel}" style="width: 300px; height: 40px; margin-left: 20px; font-size: 20px;">
+                  </td>
+                </tr>
+                <!--   배출 주소  -->
+                <tr>
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
+                    <span class="text_contentHeader">배출 주소</span>
+                    <span class="text_requiredInput">*</span>
+                  </td>
+                  <td class="col-10 box_address" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif; font-size: 16px;">
+                    <input type="text" id="pickup_zip_code" name="pickup_zip" placeholder="우편번호" th:value="${session.user.zip_code}"><br>
+                    <input type="text" id="pickup_address1" name="pickup_address1" placeholder="도로명주소" th:value="${session.user.address1}">
+                    <input type="text" id="pickup_address2" name="pickup_address2" placeholder="지번주소" th:value="${session.user.address2}"><br>
+                    <span style="color:#999;display:none"></span>
+                    <input type="text" id="pickup_address3" name="pickup_address3" placeholder="상세주소" th:value="${session.user.address3}">
+                    <input type="text" id="pickup_address4" name="pickup_address4" placeholder="참고항목" th:value="${session.user.address4}">
+                  </td>
+                </tr>
 
-            <!--   새로운 유저 정보  -->
-<!--              <table style="display: none">-->
-<!--                &lt;!&ndash;   접수자명  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 28px;">-->
-<!--                    <span class="text_contentHeader">접수자명</span>-->
-<!--                    <span class="text_requiredInput">*</span>-->
-<!--                  </td>-->
-<!--                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <input type="text" name="pickup_name" placeholder="이름 입력" style="width: 300px; height: 40px; margin-left: 20px;">-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                &lt;!&ndash;   전화번호  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 28px;">-->
-<!--                    <span class="text_contentHeader">전화번호</span>-->
-<!--                    <span class="text_requiredInput">*</span>-->
-<!--                  </td>-->
-<!--                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <input type="text" name="pickup_phone" placeholder="전화번호 입력(010-0000-0000)" style="width: 300px; height: 40px; margin-left: 20px;">-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                &lt;!&ndash;   배출 주소  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">-->
-<!--                    <span class="text_contentHeader">배출 주소</span>-->
-<!--                    <span class="text_requiredInput">*</span>-->
-<!--                  </td>-->
-<!--                  <td class="col-10 box_address" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <input type="text" name="pickup_zip_code" id="sample4_postcode" placeholder="우편번호">-->
-<!--                    <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" style="width: 150px;"><br>-->
-<!--                    <input type="text" name="pickup_address1" id="sample4_roadAddress" placeholder="도로명주소">-->
-<!--                    <input type="text" name="pickup_address2" id="sample4_jibunAddress" placeholder="지번주소"><br>-->
-<!--                    <span id="guide" style="color:#999;display:none"></span>-->
-<!--                    <input type="text" name="pickup_address3" id="sample4_detailAddress" placeholder="상세주소">-->
-<!--                    <input type="text" name="pickup_address4" id="sample4_extraAddress" placeholder="참고항목">-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                &lt;!&ndash;   주거 구분  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 30px;">-->
-<!--                    <div class="text_contentHeader">주거 구분</div>-->
-<!--                  </td>-->
-<!--                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <div style="display:flex; margin-left: 20px;">-->
-<!--                      <div>주거형태</div>-->
-<!--                      <select name="pickup_house" title="주거형태 선택" style="margin-left: 10px; margin-right: 20px;">-->
-<!--                        <option value>주거형태</option>-->
-<!--                        <option value="HC01">단층주택</option>-->
-<!--                        <option value="HC02">연립주택</option>-->
-<!--                        <option value="HC03">아파트</option>-->
-<!--                        <option value="HC04">빌딩</option>-->
-<!--                      </select>-->
-<!--                      <div>엘레베이터 유무</div>-->
-<!--                      <select name="pickup_elevator" title="엘레베이터유무 선택" style="margin-left: 10px; margin-right: 20px;">-->
-<!--                        <option value>유무 선택</option>-->
-<!--                        <option value="Y">유</option>-->
-<!--                        <option value="N">무</option>-->
-<!--                      </select>-->
-<!--                    </div>-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                &lt;!&ndash;   배출 희망일  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 20px;">-->
-<!--                    <span class="text_contentHeader">배출<br>희망일</span>-->
-<!--                    <span class="text_requiredInput">*</span>-->
-<!--                  </td>-->
-<!--                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <div style="display:flex; margin-left: 20px;">-->
-<!--                      <span style="font-size: 20px;">지정일: <input type="text" id="DatePicker"/></span>-->
-<!--                      <span id="text_insertDayOfWeek">(-)</span>-->
-<!--                      <span id="text_dayOfWeek">요일</span>-->
-<!--                    </div>-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                &lt;!&ndash;   참고 사진  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">-->
-<!--                    <div class="text_contentHeader">참고 사진</div>-->
-<!--                  </td>-->
-<!--                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <div style="display:flex; margin-left: 20px;">-->
-<!--                      <input name="pickup_photo" type="file" id="img_pickup_upload" accept="image/*" required multiple />-->
-<!--                    </div>-->
-<!--                    <div>-->
-<!--                      <ul id="img_pickup_preview"></ul>-->
-<!--                    </div>-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                &lt;!&ndash;   메모  &ndash;&gt;-->
-<!--                <tr>-->
-<!--                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">-->
-<!--                    <div class="text_contentHeader">메모</div>-->
-<!--                  </td>-->
-<!--                  <td class="col-10" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif;">-->
-<!--                    <div style="display:flex;">-->
-<!--                      <textarea class="text_memo" name="pickup_memo"></textarea>-->
-<!--                    </div>-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--              </table>-->
+
+                <!--   주거 구분  -->
+                <tr style="height: 100px;">
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
+                    <span class="text_contentHeader">주거 구분</span>
+                    <span class="text_requiredInput">*</span>
+                  </td>
+                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
+                    <div style="display:flex; margin-left: 20px; font-size: 18px;">
+                      <div>주거형태</div>
+                      <select id="pickup_house" name="pickup_house" style="margin-left: 10px; margin-right: 20px;">
+                        <option value>주거형태</option>
+                        <option value="1">단층주택</option>
+                        <option value="2">연립주택</option>
+                        <option value="3">아파트</option>
+                        <option value="4">빌딩</option>
+                      </select>
+                      <div>엘레베이터 유무</div>
+                      <select id="pickup_elevator" name="pickup_elevator" style="margin-left: 10px; margin-right: 20px;">
+                        <option value>유무 선택</option>
+                        <option value="Y">유</option>
+                        <option value="N">무</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <!--   배출 희망일  -->
+                <tr style="font-size: 20px;">
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; padding: 20px;">
+                    <span class="text_contentHeader">배출<br>희망일</span>
+                    <span class="text_requiredInput">*</span>
+                  </td>
+                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
+                    <div style="display:flex; margin-left: 20px;">
+                      <span style="margin-right: 7px;">지정일:
+                        <input type="text" id="myDateInput" name="pickup_day">
+                      </span>
+                      <span id="text_insertDayOfWeek">(-)</span>
+                      <span id="text_dayOfWeek">요일</span>
+                    </div>
+                  </td>
+                </tr>
+                <!--   참고 사진  -->
+                <tr>
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
+                    <div class="text_contentHeader">참고 사진</div>
+                  </td>
+                  <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
+                      <input name="pickup_img" type="file" class="img_pickup_upload" accept="image/*" required multiple />
+                    <div style="height: 163px;">
+                      <ul id="img_pickup_preview"></ul>
+                    </div>
+                  </td>
+                </tr>
+                <!--   메모  -->
+                <tr>
+                  <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
+                    <div class="text_contentHeader">메모</div>
+                  </td>
+                  <td class="col-10" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif;">
+                    <div style="display:flex;">
+                      <textarea class="text_memo" name="pickup_memo"></textarea>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </div>
-        </div>
-        <!--   페이지 저장 및 이동  -->
-        <div class="container">
-          <div class="box_pageMove">
-            <input type="button" class="btn btn-outline-success" value="저장하기" onclick="pickupSave()">
-            <input type="button" class="btn btn-outline-success" value="다음" onclick="return chBox()">
-<!--            <a href="/pickup2" class="btn btn-outline-success">다음</a>-->
+          <!--   페이지 이동  -->
+          <div class="container">
+            <div class="box_pageMove">
+                <input type="button" class="btn btn-outline-success" value="다음" onclick="return chBox()">
+            </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -338,4 +234,48 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="/js/pickUp.js"></script>
+<script th:inline="javascript">
+  const userInfoRadio = document.querySelector('input[value="기존 고객정보"]'); // select the "기존 고객정보" radio button
+  const newInfoRadio = document.querySelector('input[value="새로운 정보 입력"]'); // select the "새로운 정보 입력" radio button
+
+  const nameInput = document.getElementById('pickup_name');
+  const pickup_tel = document.getElementById('pickup_tel');
+  const pickup_zip_code = document.getElementById('pickup_zip_code');
+  const pickup_address1 = document.getElementById('pickup_address1');
+  const pickup_address2 = document.getElementById('pickup_address2');
+  const pickup_address3 = document.getElementById('pickup_address3');
+  const pickup_address4 = document.getElementById('pickup_address4');
+
+
+  var user = [[${user}]];
+  console.log(user); // user 객체 확인
+
+
+
+  newInfoRadio.addEventListener('change', () => {
+    if (newInfoRadio.checked) {
+      nameInput.value = '';
+      pickup_tel.value = '';
+      pickup_zip_code.value = '';
+      pickup_address1.value = '';
+      pickup_address2.value = '';
+      pickup_address3.value = '';
+      pickup_address4.value = '';
+    }
+  });
+
+
+  userInfoRadio.addEventListener('change', () => {
+    if (userInfoRadio.checked) {
+      nameInput.value = user.user_name;
+      pickup_tel.value = user.user_tel;
+      pickup_zip_code.value = user.zip_code;
+      pickup_address1.value = user.address1;
+      pickup_address2.value = user.address2;
+      pickup_address3.value = user.address3;
+      pickup_address4.value = user.address4;
+    }
+  });
+
+</script>
 </html>

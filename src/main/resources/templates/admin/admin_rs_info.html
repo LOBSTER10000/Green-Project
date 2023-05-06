@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout2.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자페이지</title>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const enroll = document.querySelector('#deleteId');
+
+            enroll.addEventListener("click", function (e) {
+                if (!confirm('삭제하시겠습니까?')) {
+                    e.preventDefault();
+                    alert("취소 되었습니다");
+                    history.back();
+                } else {
+                    alert("삭제되었습니다.");
+                }
+
+            });
+
+        })
+    </script>
+
+</head>
+<body>
+<div layout:fragment="admin_content">
+    <div class="container" id="box" style="margin-top: 50px; text-align: center" th:object="${rs_info}"  >
+        <form action="/rs_info" method="post">
+            <h2>예약자 상세정보</h2>
+            <div align="center">
+                <div class="container" style="text-align: center; width: 600px"   >
+                    <table class="table table-success" >
+                        <tr>
+                            <th>예약번호</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_no" id="pu_no" th:value="${rs_info.pu_no}" readonly >
+                            </td>
+                            <th>아이디</th>
+                            <td>
+                                <input type="text" class="form-control" name="user_id" id="user_id" th:value="${rs_info.user_id}" readonly >
+                            </td>
+                            <th>회원명</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_address_name" id="pu_address_name" th:value="${rs_info.pu_address_name}" readonly >
+                            </td>
+                            <th>전화번호</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_address_tel" id="pu_address_tel" th:value="${rs_info.pu_address_tel}" readonly >
+                            </td>
+                            <th>우편번호</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_address_zip" id="pu_address_zip" th:value="${rs_info.pu_address_zip}" readonly >
+                            </td>
+                            <th>도로명</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_address1" id="pu_address1" th:value="${rs_info.pu_address1}" readonly >
+                            </td>
+                            <th>지번</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_address2" id="pu_address2" th:value="${rs_info.pu_address2}" readonly >
+                            </td>
+                            <th>상세주소</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_address3" id="pu_address3" th:value="${rs_info.pu_address3}" readonly >
+                            </td>
+                            <th>예약요청날짜</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_day" id="pu_day" th:value="${rs_info.pu_day}" readonly >
+                            </td>
+                            <th>접수당일날짜</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_date" id="pu_date" th:value="${rs_info.pu_date}" readonly >
+                            </td>
+                            <th>접수요청메모</th>
+                            <td>
+                                <input type="text" class="form-control" name="pu_memo" id="pu_memo" th:value="${rs_info.pu_memo}" readonly >
+                            </td>
+                            <th>폐기물 사진</th>
+                            <td>
+                                <img th:src="@{/img/pickupUpload/__${rs_info.pu_img_save_name}__}">
+                            </td>
+
+
+                        </tr>
+
+                    </table>
+<!--                    <input type="submit" class="btn btn-success" value="수정" />-->
+<!--                    <a id="deleteId" th:href="@{/rs/delete(pu_no=${rs_info.pu_no})}" class="btn btn-danger"  >삭제</a>-->
+                    <button type="button" class="btn btn-success" onclick="alert('취소 되었습니다'); history.back();" id="modify3">취소</button>
+                </div>
+            </div>
+        </form>
+
+</body>
+</html>

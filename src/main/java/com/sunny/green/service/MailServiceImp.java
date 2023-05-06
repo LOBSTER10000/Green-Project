@@ -18,14 +18,14 @@
 //
 //    private final JavaMailSender javaMailSender;
 //
-
+//
 //    public void successMail(MailVo mailVo) throws MessagingException {
 //        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 //        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 //        mimeMessageHelper.setTo(mailVo.getMail_receiver());
 //        mimeMessageHelper.setSubject(mailVo.getMail_title());
 //        mimeMessageHelper.setText(mailVo.getMail_content());
-//
+//        mimeMessageHelper.setFrom("ghh607@naver.com");
 //        javaMailSender.send(mimeMessage);
 //
 //    }

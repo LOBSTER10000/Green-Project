@@ -28,6 +28,13 @@
     </select>
 
 
+    <!-- 유저 정보 불러오기   -->
+    <select id="selectAll1" resultType="com.sunny.green.vo.UserVo">
+        select *
+        from user
+        where user_id = #{user_id}
+    </select>
+
     <!-- 개인정보 수정   -->
     <update id="updateUser">
         update user
@@ -41,6 +48,7 @@
           , address2   = #{address2}
           , address3   = #{address3}
           , address4   = #{address4}
+          , user_point = #{user_point}
         where user_id = #{user_id}
     </update>
 
@@ -58,12 +66,31 @@
         where user_id = #{user_id}
     </update>
 
-
-    <!--보영-->
     <select id="selectAll" resultType="com.sunny.green.vo.UserVo">
-        SELECT *
-        FROM user;
+        SELECT * FROM user;
     </select>
 
+
+    <select id="selectAll2" resultType="com.sunny.green.vo.UserVo">
+        SELECT *
+        FROM user
+        <where>
+            <if test="searchType=='user_name' and keyword != null and keyword != '' ">
+                AND user_name like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='user_id' and keyword != null and keyword != '' ">
+                AND user_id like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='user_tel' and keyword != null and keyword != '' ">
+                AND user_tel like CONCAT('%', #{keyword}, '%')
+            </if>
+
+        </where>
+    </select>
+
+
+    <select id="selectAll1" resultType="com.sunny.green.vo.UserVo">
+        select * from user where user_id = #{user_id}
+    </select>
 </mapper>
 

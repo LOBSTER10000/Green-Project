@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+.boxes {
+    box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
+    -webkit-box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
+    -moz-box-shadow: 20px 16px 19px 0px rgba(0,0,0,0.72);
+}
+
+#boxes1 {
+
+}
+
+#boxes1:before{
+    position: absolute;
+    width: 35px;
+    height: 3px;
+    background-color: darkgreen;
+    content: "";
+    bottom: 51%;
+}
+
+.boxes2:before{
+    position: absolute;
+    width: 35px;
+    height: 3px;
+    background-color: darkgreen;
+    content: "";
+}
+
+#boxes3:before{
+    position: absolute;
+    width: 35px;
+    height: 3px;
+    background-color: darkgreen;
+    content: "";
+}

@@ -26,7 +26,7 @@
                         <h1>폐가전제품 방문수거 서비스</h1>
                         <div class="hero-btns">
                             <a href="/pickup" class="boxed-btn">수거 예약하기</a>
-                            <a href="#" class="bordered-btn">예약 조회/변경</a>
+                            <a href="/myPage" class="bordered-btn">예약 조회/변경</a>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                         <i class="fas fa-phone-volume"></i>
                     </div>
                     <div class="content">
-                        <h3>1234-5678</h3>
+                        <h3>02-1234-5678</h3>
                         <p>9~6 상담가능</p>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
 <!-- end features list section -->
 
 <!-- product section -->
-<div class="product-section mt-100 mb-100">
+<div class="product-section mt-100 mb-100" style="margin-top: 40px; margin-bottom: 40px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 text-center">
@@ -91,11 +91,11 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" style="justify-content: center;">
             <div class="card" style="width: 360px; margin-right: 9px; margin-top: 10px; text-align: center;" th:each="list : ${pv}">
                 <a href="#"><img th:src="@{/img/product/__${list.pro_img_save_name}__}" class="card-img-top" alt="..." style="width: 100%; height:300px;"></a>
                 <div class="card-body">
-                    <h4 class="card-title"><a th:text="${list.pro_name}">스타벅스 1만원권</a></h4>
+                    <h4 class="card-title"><a th:text="${list.pro_name}" style="color: dodgerblue;">스타벅스 1만원권</a></h4>
                     <h6 class="card-subtitle mb-2 text-muted" style="font-size: 16px; font-weight: 700;">모바일 상품권</h6>
                     <p style="color: red; font-weight: 700; font-size: 16px; font-family: 'NanumBarunGothic', sans-serif;" >그린포인트 : [[${list.pro_point}]]p</p>
                 </div>
@@ -111,45 +111,42 @@
 <!-- end product section -->
 
 <!-- cart banner section -->
-<section class="service pt-100 pb-100" id="service_box">
+<section class="service pt-100 pb-100" id="service_box" style="padding-top: 40px; padding-bottom: 40px;">
     <div class="container text-center p-5 bg-light rounded-3">
         <h1 class="main_title">수거 과정</h1>
         <div class="row py-4">
-            <div class="col-sm"><h3>01</h3> <br> <img class="h3-img" src="/assets/img/join.png"
+            <div class="col-sm"><h3>01</h3> <br>
+                <img class="h3-img" src="/assets/img/join.png"
                                                       style="width: 70px;" alt="가입 이미지"> <br>
                 <h4 class="h4-line2">회원가입<br>로그인</h4>
 
             </div>
-            <div class="col-sm"><h3>&gt;</h3></div>
             <div class="col-sm"><h3>02</h3> <br> <img class="h3-img" src="/assets/img/rsv.png"
                                                       style="width: 80px;" alt="예약 이미지"><br>
                 <h4 class="h4-line">예약하기</h4>
             </div>
-            <div class="col-sm"><h3>&gt;</h3></div>
             <div class="col-sm"><h3>03</h3> <br> <img class="h3-img" src="/assets/img/pickup.png"
                                                       style="width: 80px;" alt="수령 이미지"><br>
                 <h4 class="h4-line">방문수령</h4>
             </div>
-            <div class="col-sm"><h3>&gt;</h3></div>
             <div class="col-sm"><h3>04</h3> <br> <img class="h3-img" src="/assets/img/greenPoint.png"
                                                       style="width: 80px;" alt="적립 이미지"> <br>
                 <h4 class="h4-line2">GreenPoint<br> 지급/적립</h4>
             </div>
-            <div class="col-sm"><h3>&gt;</h3></div>
             <div class="col-sm"><h3>05</h3> <br><img class="h3-img" src="/assets/img/coupon.png"
                                                      style="width: 80px;" alt="교환 이미지"> <br>
                 <h4 class="h4-line2">E-coupon<br>교환하기 </h4>
             </div>
         </div>
         <div class="main-btn">
-            <a class="boxed-btn"><i class="fa-solid fa-magnifying-glass"></i> 자세히 보기</a>
+            <a href="/info" class="boxed-btn"><i class="fa-solid fa-magnifying-glass"></i> 자세히 보기</a>
         </div>
     </div>
 </section>
 <!-- end cart banner section -->
 
 <!-- testimonail-section -->
-<div class="testimonail-section mt-100 mb-100">
+<div class="testimonail-section mt-100 mb-100" style="margin-top: 40px; margin-bottom: 40px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-10 offset-lg-1 text-center">
@@ -208,14 +205,14 @@
 
 <!-- shop banner -->
 <section class="shop-banner">
-    <div class="container">
-        <a href="/board" class="cart-btn btn-lg" id="find_btn"><i class="fa-solid fa-magnifying-glass"></i> 자세히 보기</a>
+    <div class="container" style="width: 100%; height: 100%; text-align: center;">
+        <a href="/notice" style="margin-top: 45%;" class="cart-btn btn-lg" id="find_btn"><i class="fa-solid fa-magnifying-glass"></i> 자세히 보기</a>
     </div>
 </section>
 <!-- end shop banner -->
 
 <!-- latest news -->
-<div class="latest-news pt-80 pb-100">
+<div class="latest-news pt-80 pb-100" style="padding-top: 40px; padding-bottom: 40px;">
     <div class="container">
         <section class="notice_area">
             <div class="wrap" id="notice_box">

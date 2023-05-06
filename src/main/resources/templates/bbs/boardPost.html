@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+    <script src="/js/ckeditor/ckeditor.js"></script>
+</head>
+<body>
+<div layout:fragment="content" style="margin-bottom: 50px; padding-top: 120px;">
+    <div class="container">
+        <p style="font-weight: 700; font-size: 30px; letter-spacing: -2px; font-family: 'NanumBarunGothic', sans-serif; margin-left: 4%;">Q&A 게시글 등록</p>
+    <form action="boardPost" method="post">
+        <input type="hidden" name="user_id" th:value="${user.user_id}">
+        <table style="text-align: center; font-weight: 700; font-size: 25px;">
+            <tbody>
+            <tr class="row">
+                <td class="col-2" style="font-family: 'GmarketSansMedium', sans-serif;">제목</td>
+                <td class="col-10"><input style="width: 100%;" type="text" name="board_title"></td>
+            </tr>
+
+            <tr class="row" style="margin-top: 2%;">
+                <td class="col-2" style="margin-top: 15%; font-family: 'GmarketSansMedium', sans-serif;">
+                    내용
+                </td>
+                <td class="col-10">
+                    <textarea name="board_content" id="editor1" rows="10" cols="80"></textarea>
+                </td>
+                <script>
+                    CKEDITOR.replace('editor1');
+                </script>
+            </tr>
+            </tbody>
+        </table>
+        <div style="float: right; margin-top: 1%; margin-right: 10%;">
+        <input type="submit" value="등록" style="width: 75px; background: #2a6a47; color: white; border: none; font-weight: 700;">
+        </div>
+    </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,75 +1,140 @@
 package com.sunny.green.controller;
 
+
 import com.sunny.green.dao.UserDao;
-import com.sunny.green.vo.PickupSaveVo;
-import com.sunny.green.vo.UserVo;
+import com.sunny.green.service.PickupServiceImpl;
+import com.sunny.green.vo.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class PickUpController {
 
-    private final UserDao ud;
-    PickupSaveVo pickupSaveVo = new PickupSaveVo();
 
+    private final PickupServiceImpl pSI;
+
+
+    private final UserDao ud;
+
+    // 예약 첫번째 페이징
     @GetMapping("/pickup")
     public String pickupPage(HttpSession session, Model model) {
         if(session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
             return "pickup/pickUp";
         } else {
-            model.addAttribute("alert", "로그인을 먼저 해주세요");
+            model.addAttribute("alert", "로그인이 필요한 페이지입니다.");
             model.addAttribute("url", "/login");
             return "alert";
         }
     }
 
+    // 예약 첫번째 페이지 입력값 전달
+    @PostMapping("pickupSave.do")
+    @ResponseBody
+    public void pickupPageSave(PickupAddressVo address, HttpSession session) {
+        session.setAttribute("address", address);
+    }
+    @PostMapping("pickupSave2.do")
+    @ResponseBody
+    public void pickupPageSave(PickupInfoVo info, HttpSession session) {
+        session.setAttribute("info", info);
+    }
+    //이미지 임시 저장
+    @PostMapping("pickupImg.do")
+    @ResponseBody
+    public void pickupImg(@RequestParam("images") List<MultipartFile> files, HttpSession session) {
+        List<Integer> imgNo = pSI.pickupImg(files);
+        if (imgNo != null) {
+            session.setAttribute("imgNo", imgNo);
+        }
+    }
+
+    // 예약 두번째 페이징
     @GetMapping("/pickup2")
     public String pickupPage2() {
+
         return "pickup/pickUp2";
     }
 
-    @PostMapping("pickupSave.do")
-    public void pickupSave(
-            @RequestParam("user_id")String user_id, @RequestParam("pu_name")String pu_name, @RequestParam("pu_tel")String pu_tel,
-            @RequestParam("pu_zip")int pu_zip, @RequestParam("pu_address1")String pu_address1, @RequestParam("pu_address2")String pu_address2,
-            @RequestParam("pu_address3")String pu_address3, @RequestParam("pu_address4")String pu_address4, @RequestParam("house_no")int house_no,
-            @RequestParam("pu_elevator")String pu_elevator, @RequestParam("pu_day")String pu_day, @RequestParam("pu_img")String pu_img,
-            @RequestParam("text_memo")String text_memo) {
-        System.out.println(user_id);
-        pickupSaveVo.setUser_id(user_id);
-        pickupSaveVo.setPu_name(pu_name);
-        pickupSaveVo.setPu_tel(pu_tel);
-        pickupSaveVo.setPu_zip(pu_zip);
-        pickupSaveVo.setPu_address1(pu_address1);
-        pickupSaveVo.setPu_address2(pu_address2);
-        pickupSaveVo.setPu_address3(pu_address3);
-        pickupSaveVo.setPu_address4(pu_address4);
-        pickupSaveVo.setHouse_no(house_no);
-        pickupSaveVo.setPu_elevator(pu_elevator);
-        pickupSaveVo.setPu_day(pu_day);
-        pickupSaveVo.setPu_img(pu_img);
-        pickupSaveVo.setText_memo(text_memo);
+    // 예약 세번째 페이징
+    @GetMapping("/pickup3")
+    public String pickupPage3(@RequestParam(name = "categoryVal") List<String> categoryVals,
+                              @RequestParam(name = "countVal") List<String> countVals,
+                              Model model, HttpSession session) {
+        List<Map<String, String>> items = new ArrayList<>();
+        for (int i = 0; i < categoryVals.size(); i++) {
+            Map<String, String> item = new HashMap<>();
+            item.put("categoryVal", categoryVals.get(i));
+            item.put("countVal", countVals.get(i));
+            items.add(item);
+        }
+        System.out.println("items>>>>>>"+items);
+        List<PickupCategoryVo> changeItems = pSI.pickupCategorySet(items);
+        System.out.println("changeItems>>>>>>"+changeItems);
 
-        System.out.println(pickupSaveVo);
+        PickupInfoVo info = (PickupInfoVo) session.getAttribute("info");
+        String imgVal = info.getPu_img();
+        if (Objects.equals(imgVal, "Y")) {
+            List<Integer> imgNo = (List<Integer>) session.getAttribute("imgNo");
+            List<PickupImgVo> pickupImg = pSI.pickupImgView(imgNo);
+            System.out.println("pickupImg>>>>>>"+pickupImg);
+            model.addAttribute("pickupImg", pickupImg);
+        } else {
+            model.addAttribute("pickupImg", "None");
+        }
+        session.setAttribute("changeItems", changeItems);
+        model.addAttribute("items", items);
+        return "pickup/pickUp3";
     }
 
-    @GetMapping("/pickup3")
-    public String pickupPage3() {
-        return "pickup/pickUp3";
+    @GetMapping("/pickupRealSave")
+    public String pickupRealSave(HttpSession session, Model model) {
+        PickupAddressVo address = (PickupAddressVo) session.getAttribute("address");
+        PickupInfoVo info = (PickupInfoVo) session.getAttribute("info");
+        List<PickupCategoryVo> items = (List<PickupCategoryVo>) session.getAttribute("changeItems");
+        System.out.println("마지막items>>>>>>"+items);
+
+        int successVal = pSI.pickupAddress(address);
+        if(successVal==1) {
+            int addressNo = address.getPu_address_no();
+            info.setPu_address_no(addressNo);
+            int successVal2 = pSI.pickupInfo(info);
+            if(successVal2==1) {
+                int infoNo = info.getPu_no();
+                int categoryResult = pSI.pickupCategoryInsert(items, infoNo);
+                String imgVal = info.getPu_img();
+                if(Objects.equals(imgVal, "Y")) {
+                    List<Integer> imgNo = (List<Integer>) session.getAttribute("imgNo");
+                    int successVal3 = pSI.pickupImgInfoNo(imgNo, infoNo);
+                }
+            }
+        }
+        model.addAttribute("alert", "수거 예약되었습니다.");
+        model.addAttribute("url", "/index");
+        return "alert";
     }
 
     @GetMapping("/reservationBd")
     public String reservationBd(HttpSession session, Model model) {
 
         if(session.getAttribute("user") == null){
-            model.addAttribute("alert", "로그인을 해주시기 바랍니다.");
+            model.addAttribute("alert", "로그인이 필요한 페이지입니다.");
             model.addAttribute("url", "/login");
         }
         else{
@@ -78,9 +143,16 @@ public class PickUpController {
             System.out.println("번호는 뭘까요? : " + user1);
             model.addAttribute("user", user1);
 
-            return "/myPage/reservationBd";
+            return "myPage/reservationBd";
         }
-        return "/alert";
+        return "alert";
+    }
+
+    @GetMapping("/img/pickupUpload/{pu_img_save_name}")
+    @ResponseBody
+    public ResponseEntity<Resource> getImage(@PathVariable("pu_img_save_name") String imgSaveName) throws IOException {
+        Resource resource = new FileSystemResource("src/main/resources/static/img/pickupUpload/" + imgSaveName);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 
 }

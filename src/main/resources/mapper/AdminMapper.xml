@@ -61,8 +61,18 @@
         where pro_num = ${pro_num}
     </update>
 
-    <!--   admin_rs 에서 모든 예약자정보를 가져옴 -->
-    <select id="rsList" resultType="com.sunny.green.vo.PickupSaveVo">
-        SELECT * FROM pickup_info AS i JOIN pickup_address AS a ON i.user_id = a.user_id;
+    <insert id="insertAdmin">
+        insert into admin(admin_id, admin_pass, user_id, user_pass)
+        values(#{admin_id}, #{admin_pass}, #{user_id}, #{user_pass})
+    </insert>
+
+
+    <select id="selectAdmin" resultType="com.sunny.green.vo.AdminVo">
+        select * from admin where admin_id = #{admin_id} and admin_pass = #{admin_pass}
+    </select>
+
+    <!-- 공지사항 -->
+    <select id="selectAdmin2" resultType="com.sunny.green.vo.AdminVo">
+        select * from admin where user_id = #{user_id}
     </select>
 </mapper>

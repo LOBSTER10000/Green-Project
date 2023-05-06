@@ -86,12 +86,13 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("패스워드 값을 적지 않았습니다");
             e.preventDefault();
         } else if (user_name.value === "") {
-            alert("이름을 적지 않았습니다")
+            alert("이름을 적지 않았습니다");
+            e.preventDefault();
         } else if (user_email.value === "") {
             alert("이메일을 적지 않았습니다");
             e.preventDefault();
         } else if (user_tel.value === "") {
-            alert("번호를 적지 않았습니다")
+            alert("번호를 적지 않았습니다");
             e.preventDefault();
         }
     });

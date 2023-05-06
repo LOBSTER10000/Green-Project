@@ -7,7 +7,6 @@ $(function loadJQuery() {
     document.getElementsByTagName("head")[0].appendChild(oScript);
 })
 
-
 // 주소 검색기능
 jQuery.noConflict(
     function sample4_execDaumPostcode() {
@@ -76,6 +75,7 @@ flatpickr("#myDateInput", {
             return (date.getDay() === 0 || date.getDay() === 6);
         }
     ],
+    minDate: "today",
     dateFormat: "Y-m-d" // 날짜 형식 설정
 });
 
@@ -90,38 +90,45 @@ document.getElementById("myDateInput").addEventListener("change", function() {
 
 
 // 이미지 첨부
-const upload = document.querySelector('#img_pickup_upload');
+const upload = document.querySelector('.img_pickup_upload');
 upload.addEventListener('change', getImageFiles);
 
-function getImageFiles(e) {
-    const uploadFiles = [];
-    const files = e.currentTarget.files;
-    const imagePreview = document.querySelector('#img_pickup_preview');
-    const docFrag = new DocumentFragment();
+var inputFileList = new Array();     // 이미지 파일을 담아놓을 배열 (업로드 버튼 누를 때 서버에 전송할 데이터)
 
-    if ([...files].length >= 7) {
-        alert('이미지는 최대 6개 까지 업로드가 가능합니다.');
+function getImageFiles(e) {
+    const files = e.currentTarget.files;
+    var filesArr = Array.prototype.slice.call(files);
+    const imagePreview = document.querySelector('#img_pickup_preview');
+
+    // 업로드 된 파일 유효성 체크
+    if (filesArr.length > 4) {
+        alert("이미지는 최대 4개까지 업로드 가능합니다.");
+        $('input[name=images]').val();
         return;
     }
 
-    // 파일 타입 검사
-    [...files].forEach(file => {
+    filesArr.forEach(function(file) {
+        // 파일 타입 검사
         if (!file.type.match("image/.*")) {
             alert('이미지 파일만 업로드가 가능합니다.');
-            return
+            return;
         }
 
         // 파일 갯수 검사
-        if ([...files].length < 7) {
-            uploadFiles.push(file);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const preview = createElement(e, file);
-                imagePreview.appendChild(preview);
-            };
-            reader.readAsDataURL(file);
+        if (inputFileList.length >= 4) {
+            alert('이미지는 최대 4개까지 업로드 가능합니다.');
+            return;
         }
+
+        inputFileList.push(file);    // 이미지 파일을 배열에 담는다.
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const preview = createElement(e, file);
+            imagePreview.appendChild(preview);
+        };
+        reader.readAsDataURL(file);
     });
+
 }
 
 // 첨부 이미지 preview
@@ -142,38 +149,17 @@ function createElement(e, file) {
     $(document).ready(function() {
         $(delBtn).click(function () {
             $(li).remove();
+            const fileName = img.getAttribute('data-file');
+            inputFileList = inputFileList.filter((file) => file.name !== fileName); // 배열에서 이미지 파일 제거
         })
     });
+
     return li;
-}
-
-
-let result = '';
-
-// 약관 동의 체크값
-function getCheckboxValue() {
-    if($("#checkBox_colPersonInfo").prop("checked")) {
-        result = $("#checkBox_colPersonInfo").val(1);
-        console.log(result);
-    }
 }
 
 // 다음페이지 이동시, 입력값 빈칸 확인
 function chBox() {
-    if (result == null) {
-        alert("약관에 동의해주세요");
-        $("#checkBox_colPersonInfo").focus();
-        return false;
-    } else {
-        return true;
-    }
-}
-
-
-
-// 입력정보 저장
-function pickupSave() {
-    const user_id = $("#pickup_userID").val();
+    // 예약정보 값 불러오기
     const pu_name = $("#pickup_name").val();
     const pu_tel = $("#pickup_tel").val();
     const pu_zip = $("#pickup_zip_code").val();
@@ -181,31 +167,101 @@ function pickupSave() {
     const pu_address2 = $("#pickup_address2").val();
     const pu_address3 = $("#pickup_address3").val();
     const pu_address4 = $("#pickup_address4").val();
-    const house_no = $("#pickup_house").val();
-    const pu_elevator = $("#pickup_elevator").val();
     const pu_day = $("#myDateInput").val();
     let pu_img;
-    if ($("#img_pickup_upload").val() != null) {
+    // 이미지 유무 확인 후 Y,N 입력
+    if ($(".img_pickup_upload")[0].files.length > 0) {
         pu_img = "Y";
     } else {
         pu_img = "N";
     }
-    const text_memo = $(".text_memo").val();
+    const user_id = $("#pickup_userID").val();
+    let house_no = $("#pickup_house").val();
+    let pu_elevator = $("#pickup_elevator").val();
+    let text_memo = $(".text_memo").val();
+    if (text_memo === "") {
+        text_memo = "None";
+    }
 
-    $.ajax({
-        url:"pickupSave.do",
-        type:"post",
-        data:{"user_id":user_id, "pu_name":pu_name, "pu_tel":pu_tel,
-        "pu_zip":pu_zip,"pu_address1":pu_address1,"pu_address2":pu_address2,
-        "pu_address3":pu_address3,"pu_address4":pu_address4,"house_no":house_no,"pu_elevator":pu_elevator,
-        "pu_day":pu_day, "pu_img":pu_img, "text_memo":text_memo},
-        success: "",
-        error: function() {
-            alert('error')
-        }
-    })
+
+    let formData = new FormData();  // 폼 객체
+
+    for (let i = 0; i < inputFileList.length; i++) {
+        formData.append("images", inputFileList[i]);  // 배열에서 이미지들을 꺼내 폼 객체에 담는다.
+    }
+
+    const address = {
+        "user_id": user_id,
+        "pu_address_name": pu_name,
+        "pu_address_tel": pu_tel,
+        "pu_address_zip": pu_zip,
+        "pu_address1": pu_address1,
+        "pu_address2": pu_address2,
+        "pu_address3": pu_address3,
+        "pu_address4": pu_address4
+    };
+
+   const info = {
+        "user_id": user_id,
+        "house_no": house_no,
+        "pu_elevator": pu_elevator,
+        "pu_day": pu_day,
+        "pu_img": pu_img,
+        "text_memo": text_memo
+   };
+
+
+    // 필수정보 입력 확인
+    if (pu_name === "" || pu_tel === "" || pu_zip === "" || pu_address1 === "" || pu_address2 === "" ||
+        pu_address3 === "" || pu_address4 === "" || pu_day === "" || house_no === "" || pu_elevator === "") {
+        alert("필수 정보를 입력해주세요")
+        return false;
+    } else if ($("#checkBox_colPersonInfo").is(":checked") === false) {
+        $("#checkBox_colPersonInfo").focus();
+        alert("약관에 동의해주세요");
+        return false;
+    } else {
+        $.ajax({
+            url:"pickupSave.do",
+            type:"post",
+            data: address,
+            success: function() {
+                $.ajax({
+                    url: "pickupSave2.do",
+                    type: "post",
+                    data: info,
+                    success: function() {
+                        if (pu_img === "Y" ) {
+                            $.ajax({
+                                type: 'post',
+                                url: 'pickupImg.do',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                enctype: 'multipart/form-data',
+                                cache: false,
+                                success: function() {
+                                    location.href = "/pickup2";
+                                },
+                                error: function (xhr, status, error) {
+                                    alert("오류가 발생했습니다.\n" + error);
+                                }
+                            });
+                        } else {
+                            location.href = "/pickup2";
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert("오류가 발생했습니다.\n" + error);
+                    }
+                })
+            },
+            error: function(xhr, status, error) {
+                alert("오류가 발생했습니다.\n" + error);
+            }
+        })
+    }
+
 }
-
-
-
-

@@ -8,6 +8,24 @@
   <meta charset="UTF-8">
   <title> 관리자페이지 </title>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const enroll = document.querySelector('#deleteId');
+
+      enroll.addEventListener("click", function (e) {
+        if (!confirm('삭제하시겠습니까?')) {
+          e.preventDefault();
+          alert("취소 되었습니다");
+          history.back();
+        } else {
+          alert("삭제되었습니다.");
+        }
+
+      });
+
+    })
+  </script>
+
 </head>
 <body>
 <div layout:fragment="admin_content">
@@ -63,18 +81,15 @@
               <th>포인트</th>
               <td><input type="text" class="form-control" name="user_point"  th:value="${user.user_point}" /></td>
             </tr>
-            <tr>
-              <td colspan="2" align="center">
-                <input type="submit" class="btn btn-success" value="수정" />
-                <div> <a id="delete" class="btn btn-success" th:href="@{delete(user_id=${user.user_id})}">삭제</a></div>
-                <button type="button" class="btn btn-success" onclick="alert('취소 되었습니다'); history.back();" id="modify3">취소</button>
-              </td>
-            </tr>
           </table>
+          <input type="submit" class="btn btn-success" value="수정" />
+          <a id="deleteId" th:href="@{/admin/delete(user_id=${user.user_id})}" class="btn btn-danger"  >삭제</a>
+          <button type="button" class="btn btn-success" onclick="alert('취소 되었습니다'); history.back();" id="modify3">취소</button>
         </div>
       </div>
     </form>
-  </div>
+
+</div>
 </div>
 </body>
 </html>

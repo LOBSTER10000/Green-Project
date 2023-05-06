@@ -11,20 +11,23 @@
 
 <div class="chat_container">
     <header>
-        <h1>채팅</h1>
+        <h1>[[${session.user.user_name}]]님의 채팅</h1>
     </header>
     <ul id="msg_box" class="messages"></ul>
-        <div id="input_container">
-            <div id="input" contenteditable="true">내용을 입력해주세요.</div>
-            <button id="sendBtn">전송</button>
-        </div>
+    <div id="input_container">
+        <div id="input" contenteditable="true"></div>
+        <button id="sendBtn">전송</button>
+    </div>
 </div>
 
 <script th:inline="javascript">
     // jQuery 로드 확인
     console.log($);
 
-    const user_name = [[${user_name}]];
+    //const는 상수 선언, 변경이 불가하다
+    let cur_session = [[${session.user.user_id}]];
+
+    let user_id= cur_session;
 
     $(function () {
         const websocket = new WebSocket("ws://localhost:8080/ws/chat");
@@ -34,72 +37,75 @@
         websocket.onclose = onClose;
 
         // 전송 버튼 클릭 시
-        $("#sendBtn").click(function() {
+        $("#sendBtn").click(function () {
             send();
         });
 
         // 엔터 키 입력 시
-        $("#input").keypress(function(event) {
-            if (event.keyCode == 13) {
+        $("#input").keypress(function (event) {
+            if (event.keyCode === 13) {
                 send();
             }
         });
 
         function send() {
-            console.log(user_name + ":" + $("#input").text());
+            console.log(user_id + ":" + $("#input").text());
             if ($("#input").text() !== "") {
-                websocket.send(user_name + ":" + $("#input").text());
+                websocket.send(user_id + ":" + $("#input").text());
                 $("#input").text('');
             }
         }
 
-        function onClose(evt) {
-            let str = user_name + ": 님이 퇴장했습니다."
+        function onOpen(evt) {
+            let str = user_id + ": 님이 입장했습니다."
             websocket.send(str);
         }
 
-        function onOpen(evt) {
-            let str = user_name + ": 님이 입장했습니다."
+        function onClose(evt) {
+            let str = user_id + ": 님이 퇴장했습니다."
             websocket.send(str);
         }
 
         function onMessage(msg) {
             let data = msg.data;
-            let user_name = null; // 데이터를 보낸 사람
+            let user_id = null; // 데이터를 보낸 사람
             let message = null;
             let arr = data.split(":");
 
-            // 테스트 용도
-            for (let i = 0; i < arr.length; i++) {
+            for (var i = 0; i < arr.length; i++) {
                 console.log('arr[' + i + ']: ' + arr[i]);
             }
 
-            let cur_session = user_name;
-
             // 현재 세션에 로그인 한 사람
-            console.log("cur_session : " + user_name);
+            console.log("현재 로그인한 사용자 : " + cur_session);
 
             // 웹소켓에서 받은 데이터를 : 로 구분해서 나눈 후 파싱
-            user_name = arr[0].trim();
+            user_id = arr[0].trim();
+
             if (arr[1] === undefined) {
                 message = '';
             } else {
                 message = arr[1].trim(); // trim은 공백을 없애줌
             }
 
-            if (message === " 님이 입장하셨습니다.") {
-                message = user_name + "님이 입장하셨습니다.";
+            if (message == "님이 입장했습니다.") {
+                message = user_id + "님이 입장했습니다.";
             }
-            if (message === undefined) {
+
+            if (message == undefined) {
                 message = "채팅이 종료되었습니다.";
             }
-            if (user_name === cur_session) {
-                let str = "<li class='other'>";
+
+            if (cur_session && user_id === cur_session) {
+                // 현재 세션의 사용자가 보낸 메시지인 경우
+                let str = "<li class='self'>";
                 str += message;
                 str += "</li>";
                 $("#msg_box").append(str);
-            } else {
-                let str = "<li class='self'>";
+            }
+            else {
+                // 다른 사용자가 보낸 메시지인 경우
+                let str = "<li class='other'>";
                 str += message;
                 str += "</li>";
                 $("#msg_box").append(str);
@@ -109,7 +115,7 @@
 </script>
 </body>
 <style>
-    .text-box div:nth-child(n+1) {
+    #msg_box div:nth-child(n+1) {
         display: none;
     }
 </style>

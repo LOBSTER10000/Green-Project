@@ -8,7 +8,7 @@
 <script src="/js/chat.js"></script>
 <title> footer </title>
 
-</head>
+
 <footer th:fragment="footerFragment">
     <!-- footer -->
     <div class="footer-area">
@@ -37,9 +37,9 @@
                         <h2 class="widget-title">서비스</h2>
                         <ul>
                             <li><a href="/pickup">수거예약</a></li>
-                            <li><a href="about.html">포인트교환</a></li>
+                            <li><a href="/exchange">포인트교환</a></li>
                             <li><a href="/notice">공지사항</a></li>
-                            <li><a href="news.html">Q&A</a></li>
+                            <li><a href="/notice">Q&A</a></li>
                             <li><a href="/join">회원가입</a></li>
                         </ul>
                     </div>
@@ -59,15 +59,17 @@
         </div>
     </div>
     <!-- end footer -->
-    <button onclick="topFunction()" id="top_btn" title="Go to top">TOP</button>
     <a href="javascript:openDetail('http://pf.kakao.com/_xaHuLxj/chat')" class="enter_chat"
        data-toggle="tooltip" data-placement="top" title="카카오톡 상담">
         <img src="/img/카카오톡-로고-3.png" id="chat_btn">
     </a>
-<!--    <a href="javascript:openDetail('/chat?id=guest')" class="enter_chat"
-       data-toggle="tooltip" data-placement="top" title="Go Live Chat!">
+    <a href="javascript:openDetail('/chat')" class="live_chat"
+       data-toggle="tooltip" data-placement="top" title="실시간 상담">
         <i class="fa-solid fa-comments fa-2xl"></i>
-    </a>-->
+    </a>
+    <div onclick="topFunction()" id="top_btn" title="Go to top"><i class="bi bi-arrow-bar-up">TOP</i></div>
+
+
 </footer>
 
 <!-- jquery -->
@@ -76,8 +78,6 @@
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <!-- isotope -->
 <script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
-<!-- waypoints -->
-<script src="/assets/js/waypoints.js"></script>
 <!-- owl carousel -->
 <script src="/assets/js/owl.carousel.min.js"></script>
 <!-- magnific popup -->

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunny.green.dao.PickupDao">
+    <!--  pickup Address에 값 입력  -->
+    <insert id="pickupAddressSave"  useGeneratedKeys="true" keyProperty="pu_address_no">
+        Insert into pickup_address(user_id, pu_address_name, pu_address_tel, pu_address_zip, pu_address1, pu_address2, pu_address3, pu_address4)
+        values (#{user_id}, #{pu_address_name}, #{pu_address_tel}, #{pu_address_zip}, #{pu_address1}, #{pu_address2}, #{pu_address3},#{pu_address4})
+        <selectKey keyProperty="pu_address_no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+    <insert id="pickupInfoSave" useGeneratedKeys="true" keyProperty="pu_no">
+        Insert into pickup_info(pu_address_no, user_id, house_no, pu_elevator, pu_day, pu_img, pu_memo)
+        values (#{pu_address_no}, #{user_id}, #{house_no}, #{pu_elevator}, #{pu_day}, #{pu_img}, #{text_memo})
+        <selectKey keyProperty="pu_no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+    <insert id="pickupCategorySave">
+        Insert into pickup_category(pu_no, category_no, pu_category_count)
+        values (#{pu_no}, #{category_no}, #{pu_category_count})
+    </insert>
+    <insert id="pickupImgSave" useGeneratedKeys="true" keyProperty="pu_img_no">
+        Insert into pickup_img(pu_img_origin_name, pu_img_save_name, pu_img_path)
+        values (#{pu_img_origin_name}, #{pu_img_save_name}, #{pu_img_path})
+        <selectKey keyProperty="pu_img_no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+    <update id="pickupImgUpdate">
+        UPDATE pickup_img set pu_no = #{pu_no} where pu_img_no = #{pu_img_no}
+    </update>
+    <select id="pickupImgView" resultType="com.sunny.green.vo.PickupImgVo">
+        SELECT * from pickup_img where pu_img_no = #{pu_img_no};
+    </select>
+
+    <!--   admin_rs 에서 모든 예약자정보를 가져옴 -->
+    <select id="rsList" resultType="com.sunny.green.vo.PickupDetailVo">
+        SELECT * FROM pickup_info;
+    </select>
+
+    <!--    rsList 검색  -->
+    <select id="rsList2" resultType="com.sunny.green.vo.PickupDetailVo">
+        SELECT *
+        FROM pickup_info;
+        <where>
+            <if test="searchType=='pu_day' and keyword != null and keyword != '' ">
+                AND pu_day like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='pu_date' and keyword != null and keyword != '' ">
+                AND pu_date like CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="searchType=='user_id' and keyword != null and keyword != '' ">
+                AND user_id like CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--    예약자상세조회-->
+    <select id="rs_info" resultType="com.sunny.green.vo.PickupDetailVo">
+        SELECT * FROM pickup_info LEFT JOIN pickup_address ON pickup_info.#{pu_address_no} = pickup_address.#{pu_address_no}
+        JOIN pickup_img ON pickup_info.#{pu_no} = pickup_img.#{pu_no};
+    </select>
+
+</mapper>

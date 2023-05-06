@@ -36,17 +36,18 @@
     border: none;
     margin-top: 30px;
     background: #faffbc;
-    width: 90%;
+    width: 67%;
     height:40px;
-
+    font-family: NanumBarunGothic, sans-serif;
 }
 
 #userPass{
     border: none;
     margin-top: 20px;
     background: #faffbc;
-    width: 90%;
+    width: 67%;
     height:40px;
+    font-family: NanumBarunGothic, sans-serif;
 }
 
 .row > div > .container {

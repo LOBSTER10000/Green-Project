@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sunny.green.dao.CommentDao">
+
+    <!-- 댓글 리스트 -->
+    <select id="selectAllComment" resultType="com.sunny.green.vo.CommentVo">
+        select * from comment where board_num = #{board_num}
+    </select>
+
+    <!-- 댓글 수 -->
+    <select id="CommentTotal" resultType="int">
+        select count(*) from comment where board_num = #{board_num}
+    </select>
+
+    <!-- 댓글 등록 -->
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="com_num">
+        insert into comment(user_id, com_content, com_date, board_num) values (#{user_id}, #{com_content}, NOW(), #{board_num})
+    </insert>
+
+    <!-- 특정 댓글 -->
+    <select id="selectBoard" resultType="com.sunny.green.vo.CommentVo">
+        select *
+        from comment
+        where com_num = #{com_num}
+    </select>
+
+    <!-- 댓글 수정-->
+    <update id="updateComment" useGeneratedKeys="true" keyProperty="com_num">
+        update comment
+        set com_content = #{com_content}
+        where com_num = #{com_num}
+    </update>
+
+    <!-- 댓글 삭제-->
+    <delete id="deleteComment">
+        delete
+        from comment
+        where com_num = #{com_num}
+    </delete>
+
+</mapper>

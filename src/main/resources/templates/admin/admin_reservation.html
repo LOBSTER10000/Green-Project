@@ -2,11 +2,130 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout2.html}" xmlns="http://www.w3.org/1999/html">
+      layout:decorate="~{layout/layout2.html}" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8">
     <title> 관리자페이지 </title>
+
+    <!--   민지 (pagination이용하기 위함 jquery 추가)-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>
+        let content;
+
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/pagination/rs_page', // 데이터를 가져올 URL_
+                type: 'post',
+                dataType: "json",
+                success: function (data) { // 데이터를 가져온 후 실행할 콜백 함수
+                    console.log(data); // 데이터 확인용
+                    content = data;
+                    console.log(data);
+                    getData(1);
+                },
+                error: function (e) {
+                    console.log("ERROR: ", e);
+                }
+            });
+        });
+
+
+
+        // 페이징 처리
+        function pageLink(currentPage, totalPage, funName){
+            // pageLink 설정하기(?)
+            let pageUrl = "";
+            let pageLimit = 5;
+            let startPage = parseInt((currentPage - 1) / pageLimit) * pageLimit + 1;
+            let endPage = startPage - 1 + pageLimit ;
+
+            if (totalPage < endPage) {
+                endPage = totalPage;
+            }
+
+            let nextPage = endPage + 1;
+
+            //page test
+            console.log(currentPage,"curPage,",startPage,"startPage,", endPage,"endPage,",nextPage,"nextPage");
+
+            <!-- href="javascript:showNumber()" 링크 클릭시 함수실행을 시켜줌-->
+
+            //맨 첫 페이지
+            if (currentPage > 1 && pageLimit < currentPage) {
+                pageUrl += "<a class='page first' href='javascript:" + funName + "(1);'><li className=\"page-item\"></a>";
+            }
+            //이전 페이지
+            if (currentPage > pageLimit) {
+                pageUrl += " <a class='page prev' href='javascript:" + funName + "(" + (startPage == 1 ? 1 : startPage - 1) + ");'><li className=\"page-item\"></a>";
+            }
+            //~pageLimit 맞게 페이지 수 보여줌
+            for (var i = startPage; i <= endPage; i++) {
+                //현재페이지면 진하게 표시
+                if (i == currentPage) {
+                    pageUrl += " <a href='#'><strong>" + i + "</strong></a>"
+                } else {
+                    pageUrl += " <a href='javascript:" + funName + "(" + i + ");'> " + i + " </a>";
+                }
+            }
+
+            //다음 페이지
+            if (nextPage <= totalPage) {
+                pageUrl += "<a class='page next' href='javascript:" + funName + "(" + (nextPage < totalPage ? nextPage : totalPage) + ");'><li className=\"page-item\"></a>";
+            }
+            //맨 마지막 페이지
+            if (currentPage < totalPage && nextPage < totalPage) {
+                pageUrl += "<a class='page last' href='javascript:" + funName + "(" + totalPage + ");'><li className=\"page-item\"></a>";
+            }
+            //pageUrl_ test
+            console.log(pageUrl);
+            // 현재 페이지 번호를 업데이트합니다.
+
+            $('#pagingul').html(pageUrl);
+            // cur를 붙여야하나 아니면 pageUrl 을 붙여야하나 해봐야함
+            return pageUrl;
+
+
+        }
+        function getData(num) {
+            // 한페이지에 10개를 보여주기 위한 함수 설정
+            let itemsPerPage = 10;  // 한 페이지에 보여줄 데이터의 수
+            let currentPage = num;    // 현재 페이지 번호
+            let startIndex = (currentPage - 1) * itemsPerPage;  // 시작 데이터 인덱스
+            let endIndex = startIndex + itemsPerPage;          // 끝 데이터 인덱스
+            // page =1 이면  0~9 >> 10~19 >> ...
+
+            let  userTable = $("#t_body"); //t_body 변수 지정
+            // 이전 데이터를 모두 지우고
+
+            //페이징처리 ----
+            let totalPage = Math.ceil(content.length / itemsPerPage);  // 총 페이지 수
+            // pageLink(현재페이지, 전체페이지, 호출할 함수이름)  // --------- 해결해야함 !!
+            let htmlStr = pageLink(currentPage, totalPage, "getData");
+            // common.js - pageLink
+            $("#div_paginate").html(htmlStr);  // --------- 해결해야함 !!
+
+            $('#t_body').empty();
+            // 데이터를 테이블에 추가
+            $.each(content, function(i, item) {
+                if (i >= startIndex && i < endIndex) {
+                    userTable.append(
+                        '<tr>' +
+                        '<td>' + item.pu_no + '</td>' +
+                        '<td>' + item.user_id + '</td>' +
+                        '<td>' + item.pu_day + '</td>' +
+                        '<td>' + item.text_memo + '</td>' +
+                        '<td>' + item.pu_date + '</td>' +
+                        '</tr>'
+                    );
+                }
+            });
+
+        } // data 10개씩 끊어오는 함수
+    </script>
+
 
 </head>
 <body>
@@ -18,40 +137,36 @@
         <br>
     </div>
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">예약자 현황</li>
-            <li class="breadcrumb-item"><a href="#">포인트 결제내역 조회</a></li>
-            <li class="breadcrumb-item"><a href="#"> e-cupon 등록 및 수정 </a></li>
-
-        </ol>
-    </nav>
     <br>
-    <div>
-<!--        <form class="row g-3 needs-validation" novalidate>-->
-            <div class="col">
-                <select class="form-select" id="validationCustom04" required>
+    <div class="search-form" style="display: flex;">
+            <div class="col" style="display: flex;">
+                <select class="form-select" name="searchType_rs" id="validationCustom04" required >
                     <option selected disabled value="">검색유형</option>
-                    <option value="1">날짜별</option>
-                    <option>예약번호</option>
-                    <option>예약자명</option>
-                    <option>회원아이디</option>
-                    <option>픽업주소</option>
+                    <option th:value="pu_day"> 픽업날짜 </option>
+                    <option th:value="pu_date"> 접수날짜 </option>
+                    <option th:value="user_id" > 회원아이디 </option>
                 </select>
                 <div class="invalid-feedback">
                     Please select a valid state.
                 </div>
             </div>
-            <div class="col">
-                <input type="text" class="form-control" id="validationCustom05" required>
-            </div>
-            <div class="col">
-                <button class="btn btn-primary"  type="submit">검색</button>
-            </div>
-<!--        </form>-->
+        <div class="col-lg-8 col-md-6 col-sm-12 p-0">
+            <input type="text" placeholder="검색어..." class="form-control"
+                   name="searchValue_rs">
+        </div>
+        <div class="col-lg-1 col-md-3 col-sm-12 p-0">
+            <button class="btn btn-base submitbtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-search">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
     </div>
     <br>
-
 
     <!--   rsLisr table-->
     <div class="admin_rsList">
@@ -59,46 +174,25 @@
             <thead>
             <!-- 테이블 상단------------------->
             <tr>
-                <th scope="col">선택</th>
                 <th scope="col">예약번호</th>
-                <th scope="col">접수날짜</th>
-                <th scope="col">픽업장소</th>
-                <th scope="col">픽업날짜</th>
+                <th scope="col">주소번호</th>
                 <th scope="col">회원아이디</th>
-                <th scope="col">전화번호</th>
-                <th scope="col">누적포인트</th>
-                <th scope="col">포인트내용</th>
-                <th scope="col">지급포인트</th>
-                <th scope="col">지급상태</th>
+                <th scope="col">픽업날짜</th>
+                <th scope="col">예약메모</th>
+                <th scope="col">접수날짜</th>
             </tr>
             </thead>
             <!--   받아오는 데이터 값 ------------------->
             <tbody id="t_body">
-            <tr th:each="list: ${rslist}">
-                <th scope="row">
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="">
-                    </div>
-                </td>
-                </th>
-                <td>데이터</td>
-                <td>데이터</td>
-                <td>데이터</td>
-                <td>데이터</td>
-                <td>데이터</td>
-                <td>데이터</td>
-                <td>데이터</td>
-                <td>
-                    <select class="form-select" id="" required>
-                        <option selected disabled value="">승인대기중</option>
-                        <option>예약완료</option>
-                        <option>예약취소</option>
-                    </select>
-                </td>
-<!--                <td>-->
-<!--                    <button class="" type="submit">삭제</button>-->
-<!--                </td>-->
+            <tr th:each="list: ${pickup}" style="word-break: keep-all; vertical-align: middle;" >
+
+                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+
             </tr>
             </tbody>
         </table>
@@ -107,25 +201,38 @@
         <!----- 페이징 ----->
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
+                <li class="page-item" id="pagingul">
+
                 </li>
             </ul>
         </nav>
-
-        </table>
-
     </div>
+
+
+    <script>
+
+        $('.submitbtn').click(function () {
+            let type = $('select[name=searchType]').val();
+            let value = $('input[name=searchValue]').val();
+
+
+            $.ajax({
+                url: '/pagination/rs_page', // 데이터를 가져올 URL_
+                type: 'post',
+                dataType: "json",
+                data:{"searchType":type,"searchValue":value},
+                success: function (data) { // 데이터를 가져온 후 실행할 콜백 함수
+                    console.log(data); // 데이터 확인용
+                    content = data;
+                    console.log(data);
+                    getData(1);
+                },
+                error: function (e) {
+                    console.log("ERROR: ", e);
+                }
+            });
+        });
+    </script>
 
 </div>
 </body>
