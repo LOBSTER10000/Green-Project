@@ -18,7 +18,9 @@ public class CommentController {
 
     private final CommentDao cd;
 
-    //댓글 입력
+    
+    // 댓글 입력
+
     @PostMapping("insertComment.do")
     @ResponseBody
     public void postComment(CommentVo commentVo, HttpSession session)  {
@@ -34,32 +36,40 @@ public class CommentController {
 
     }
 
-    //댓글 수정
-    @PostMapping("updateComment.do")
+    
+    // 댓글 수정
+//    @PostMapping("/updateComment.do")
+//    @ResponseBody
+//    public void updateComment(CommentVo commentVo) {
+//        log.info("댓글값" + commentVo.getCom_num() );
+//        CommentVo comment = cd.selectComment(commentVo.getCom_num());
+//        int str = cd.updateComment(comment);
+//        log.info("코멘트 내용 :" + comment);
+//        log.info("댓글 수정>>>>>"+str);
+//    }
+
+    @PostMapping("/updateComment.do")
     @ResponseBody
     public void updateComment(CommentVo commentVo) {
-        CommentVo comment = cd.selectComment(commentVo.getCom_num());
-        int str = cd.updateComment(comment);
-    }
+        log.info("댓글값: " + commentVo.getCom_num());
 
-    //    댓글 삭제
-    @GetMapping("/deleteComment.do")
+        int updateResult = cd.updateComment(commentVo);
+
+        if (updateResult > 0) {
+            log.info("댓글이 수정되었습니다.");
+        } else {
+            log.info("댓글 수정에 실패했습니다.");
+        }
+    }
+    
+    // 댓글 삭제
+    @GetMapping("deleteComment.do")
     @ResponseBody
     public void deleteComment(int com_num) {
         int str = cd.deleteComment(com_num);
         System.out.println("댓글 삭제>>>>>"+str);
         log.info("정보값 " + com_num);
 //        int str1 = cd.updateComNum();
-
+  
     }
-
-//    @PostMapping("deleteComment.do")
-//    @ResponseBody
-//    public void deleteComment(@RequestParam("com_num") int com_num) {
-//        System.out.println("댓글>>>>>" + com_num);
-//        int str = cd.deleteComment(com_num);
-//        System.out.println("댓글 삭제>>>>>" + com_num);
-//    }
-
-
 }

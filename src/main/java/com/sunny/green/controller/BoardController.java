@@ -91,7 +91,7 @@ public class BoardController {
 
     // Q&A 글 수정
     @PostMapping("/updateBoard2")
-    public String updateBoard2(BbsVo bbsVo, Model model) {
+    public String updateBoard2(BbsVo bbsVo) {
         log.info("보드값" + bbsVo.getBoard_num() );
         BbsVo bbs = bd.selectBoard(bbsVo.getBoard_num());
         log.info(bbs);
