@@ -27,7 +27,6 @@
         where user_id = #{user_id}
     </select>
 
-
     <!-- 유저 정보 불러오기   -->
     <select id="selectAll1" resultType="com.sunny.green.vo.UserVo">
         select *
@@ -70,7 +69,6 @@
         SELECT * FROM user;
     </select>
 
-
     <select id="selectAll2" resultType="com.sunny.green.vo.UserVo">
         SELECT *
         FROM user
@@ -88,9 +86,4 @@
         </where>
     </select>
 
-
-    <select id="selectAll1" resultType="com.sunny.green.vo.UserVo">
-        select * from user where user_id = #{user_id}
-    </select>
 </mapper>
-

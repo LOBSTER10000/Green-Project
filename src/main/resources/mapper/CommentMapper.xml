@@ -20,7 +20,8 @@
     </insert>
 
     <!-- 특정 댓글 -->
-    <select id="selectBoard" resultType="com.sunny.green.vo.CommentVo">
+
+    <select id="selectComment" resultType="com.sunny.green.vo.CommentVo">
         select *
         from comment
         where com_num = #{com_num}
