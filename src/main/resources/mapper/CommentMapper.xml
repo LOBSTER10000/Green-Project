@@ -41,13 +41,13 @@
         where com_num = #{com_num}
     </delete>
 
-<!--    &lt;!&ndash; 번호 자동 조정 &ndash;&gt;-->
-<!--    <update id="updateComNum">-->
-<!--        <selectKey keyProperty="com_num" order="BEFORE">-->
-<!--            SELECT @num := 0-->
-<!--        </selectKey>-->
-<!--        UPDATE comment, (SELECT @num := 0) r-->
-<!--        SET comment.comment_num = (@num := @num + 1)-->
-<!--    </update>-->
+    <!--    &lt;!&ndash; 번호 자동 조정 &ndash;&gt;-->
+    <!--    <update id="updateComNum">-->
+    <!--        <selectKey keyProperty="com_num" order="BEFORE">-->
+    <!--            SELECT @num := 0-->
+    <!--        </selectKey>-->
+    <!--        UPDATE comment, (SELECT @num := 0) r-->
+    <!--        SET comment.comment_num = (@num := @num + 1)-->
+    <!--    </update>-->
 
 </mapper>

@@ -188,7 +188,7 @@ public class AdminController {
     @PostMapping("/product3")
     public String pro4(ProductVo productVo, @RequestParam("image") MultipartFile imageFile) {
         String fileName = imageFile.getOriginalFilename(); // 파일 이름 추출
-        String uploadPath = "src/main/resources/static/img/product/"; // 업로드 디렉토리 경로
+        String uploadPath = "/home/ubuntu/greentopia2/img/product/"; // 업로드 디렉토리 경로
         String filePath = uploadPath + fileName; // 저장될 파일 경로
         String uuid = UUID.randomUUID().toString();
         String realPath = uploadPath + uuid + fileName;
@@ -257,7 +257,7 @@ public class AdminController {
     @GetMapping("/img/product/{img_save_name}")
     @ResponseBody
     public ResponseEntity<Resource> getImage(@PathVariable("img_save_name") String imgSaveName) throws IOException {
-        Resource resource = new FileSystemResource("src/main/resources/static/img/product/" + imgSaveName);
+        Resource resource = new FileSystemResource("/home/ubuntu/greentopia2/img/product/" + imgSaveName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 

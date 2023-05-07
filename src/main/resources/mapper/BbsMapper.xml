@@ -37,13 +37,12 @@
     </delete>
 
 
-    <!-- 번호 자동 조정 -->
-    <update id="updateBoardNum">
-        <selectKey keyProperty="board_num" order="BEFORE">
-            SELECT @num := 0
-        </selectKey>
-        UPDATE board, (SELECT @num := 0) r
-        SET board.board_num = (@num := @num + 1)
-    </update>
-
+<!--    &lt;!&ndash; 번호 자동 조정 &ndash;&gt;-->
+<!--    <update id="updateBoardNum">-->
+<!--        <selectKey keyProperty="board_num" order="BEFORE">-->
+<!--            SELECT @num := 0-->
+<!--        </selectKey>-->
+<!--        UPDATE board, (SELECT @num := 0) r-->
+<!--        SET board.board_num = (@num := @num + 1)-->
+<!--    </update>-->
 </mapper>

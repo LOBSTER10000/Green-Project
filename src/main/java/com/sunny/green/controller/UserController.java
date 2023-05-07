@@ -243,7 +243,7 @@ public class UserController {
     @PostMapping("/uploadProfile")
     public String pro4(ProductVo productVo, @RequestParam("file") MultipartFile imageFile, HttpSession session) {
         String fileName = imageFile.getOriginalFilename(); // 파일 이름 추출
-        String uploadPath = "src/main/resources/static/img/profile/"; // 업로드 디렉토리 경로
+        String uploadPath = "/home/ubuntu/greentopia2/img/profile/"; // 업로드 디렉토리 경로
         String filePath = uploadPath + fileName; // 저장될 파일 경로
         String uuid = UUID.randomUUID().toString();
         String realPath = uploadPath + uuid + fileName;
@@ -268,23 +268,8 @@ public class UserController {
     @GetMapping("/img/profile/{img_save_name}")
     @ResponseBody
     public ResponseEntity<Resource> getImage(@PathVariable("img_save_name") String imgSaveName) throws IOException {
-        Resource resource = new FileSystemResource("src/main/resources/static/img/profile/" + imgSaveName);
+        Resource resource = new FileSystemResource("/home/ubuntu/greentopia2/img/profile/" + imgSaveName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
-    }
-
-    @GetMapping("/pokemon")
-    public String testadmin() {
-        for (int i = 0; i < 100; i++) {
-            UserVo userVo = UserVo.builder().
-                    user_id("begood" + i)
-                    .user_pass("1234")
-                    .user_name("계정" + i)
-                    .user_email("d@c.com")
-                    .user_tel("01012345678")
-                    .build();
-            ud.joinUser(userVo);
-        }
-        return "존재감 있음";
     }
 
 }

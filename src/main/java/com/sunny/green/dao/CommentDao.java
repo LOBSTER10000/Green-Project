@@ -14,6 +14,16 @@ public interface CommentDao {
     public int updateComment(CommentVo commentVo);
     public int deleteComment(int com_num);
 
+<<<<<<< HEAD
+=======
+
+
+    public int updateComNum();
+
+
+>>>>>>> master
     public CommentVo selectComment(int com_num);
-//    public int updateComNum();
+
+
+
 }

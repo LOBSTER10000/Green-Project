@@ -33,7 +33,7 @@ public class PickupServiceImpl implements PickupService {
 
         for (MultipartFile file : files) {
 
-            String pickupImgDir = "src/main/resources/static/img/pickupUpload/"; // 업로드 디렉토리 경로
+            String pickupImgDir = "/home/ubuntu/greentopia2/img/pickupUpload/"; // 업로드 디렉토리 경로
             String dbImgDir = "/img/pickupUpload/"; // DB 업로드 디렉토리 경로
 
             String originalFileName = file.getOriginalFilename();  // 기존 파일 이름

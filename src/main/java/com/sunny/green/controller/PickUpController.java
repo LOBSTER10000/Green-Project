@@ -151,7 +151,7 @@ public class PickUpController {
     @GetMapping("/img/pickupUpload/{pu_img_save_name}")
     @ResponseBody
     public ResponseEntity<Resource> getImage(@PathVariable("pu_img_save_name") String imgSaveName) throws IOException {
-        Resource resource = new FileSystemResource("src/main/resources/static/img/pickupUpload/" + imgSaveName);
+        Resource resource = new FileSystemResource("/home/ubuntu/greentopia2/img/pickupUpload/" + imgSaveName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 

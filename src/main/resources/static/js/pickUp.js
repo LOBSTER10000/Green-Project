@@ -209,7 +209,7 @@ function chBox() {
         "pu_img": pu_img,
         "text_memo": text_memo
    };
-
+    console.log(formData);
 
     // 필수정보 입력 확인
     if (pu_name === "" || pu_tel === "" || pu_zip === "" || pu_address1 === "" || pu_address2 === "" ||

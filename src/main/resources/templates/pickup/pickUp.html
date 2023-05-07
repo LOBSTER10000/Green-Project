@@ -246,24 +246,8 @@
   const pickup_address3 = document.getElementById('pickup_address3');
   const pickup_address4 = document.getElementById('pickup_address4');
 
-
   var user = [[${user}]];
   console.log(user); // user 객체 확인
-
-
-
-  newInfoRadio.addEventListener('change', () => {
-    if (newInfoRadio.checked) {
-      nameInput.value = '';
-      pickup_tel.value = '';
-      pickup_zip_code.value = '';
-      pickup_address1.value = '';
-      pickup_address2.value = '';
-      pickup_address3.value = '';
-      pickup_address4.value = '';
-    }
-  });
-
 
   userInfoRadio.addEventListener('change', () => {
     if (userInfoRadio.checked) {
@@ -274,6 +258,18 @@
       pickup_address2.value = user.address2;
       pickup_address3.value = user.address3;
       pickup_address4.value = user.address4;
+    }
+  });
+
+  newInfoRadio.addEventListener('change', () => {
+    if (newInfoRadio.checked) {
+      nameInput.value = '';
+      pickup_tel.value = '';
+      pickup_zip_code.value = '';
+      pickup_address1.value = '';
+      pickup_address2.value = '';
+      pickup_address3.value = '';
+      pickup_address4.value = '';
     }
   });
 
