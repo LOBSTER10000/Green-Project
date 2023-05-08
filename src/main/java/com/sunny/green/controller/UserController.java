@@ -27,10 +27,10 @@ import java.util.UUID;
 @Log4j2
 public class UserController {
 
-    private  final UserDao ud;
+    private final UserDao ud;
 
 
-    private  final AdminDao ad;
+    private final AdminDao ad;
 
 
     private final ExchangeDao ed;
@@ -43,6 +43,9 @@ public class UserController {
 
     private final ProfileImgDao pid;
 
+    private final BbsDao bd;
+    private final PickupDao pd;
+    private final CommentDao cd;
 
     //마이페이지 매핑
     @GetMapping("/myPage")
@@ -54,8 +57,15 @@ public class UserController {
             UserVo userDB = (UserVo) session.getAttribute("user");
             UserVo user = ud.selectAll1(userDB.getUser_id());
             ProfileImgVo profileImgVo = pid.selectProfileImg(userDB.getUser_id());
+            List<BbsVo> bv = bd.myPageBoard(userDB.getUser_id());
+            List<PickupDetailVo> pdv = pd.myPageReservation(userDB.getUser_id());
+            log.info("bv" + bv);
+            List<CommentVo> cv = cd.myPageComment(userDB.getUser_id());
             mo.addAttribute("user", user);
             mo.addAttribute("profileImgVo", profileImgVo);
+            mo.addAttribute("bv", bv);
+            mo.addAttribute("pdv", pdv);
+            mo.addAttribute("cv", cv);
             return "myPage/myPage";
         }
 
@@ -216,7 +226,7 @@ public class UserController {
             mo.addAttribute("user", user1);
             ProfileImgVo profileImgVo = pid.selectProfileImg(userDB.getUser_id());
             mo.addAttribute("profileImgVo", profileImgVo);
-            return "/myPage/greenPoint";
+            return "myPage/greenPoint";
         }
 
         return "alert";
@@ -243,7 +253,7 @@ public class UserController {
     @PostMapping("/uploadProfile")
     public String pro4(ProductVo productVo, @RequestParam("file") MultipartFile imageFile, HttpSession session) {
         String fileName = imageFile.getOriginalFilename(); // 파일 이름 추출
-        String uploadPath = "/home/ubuntu/greentopia/img/profile/"; // 업로드 디렉토리 경로
+        String uploadPath = "/home/ubuntu/greentopia2/img/profile/"; // 업로드 디렉토리 경로
         String filePath = uploadPath + fileName; // 저장될 파일 경로
         String uuid = UUID.randomUUID().toString();
         String realPath = uploadPath + uuid + fileName;
@@ -268,7 +278,7 @@ public class UserController {
     @GetMapping("/img/profile/{img_save_name}")
     @ResponseBody
     public ResponseEntity<Resource> getImage(@PathVariable("img_save_name") String imgSaveName) throws IOException {
-        Resource resource = new FileSystemResource("/home/ubuntu/greentopia/img/profile/" + imgSaveName);
+        Resource resource = new FileSystemResource("/home/ubuntu/greentopia2/img/profile/" + imgSaveName);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 

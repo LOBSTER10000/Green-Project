@@ -18,8 +18,8 @@
 <body>
 <div layout:fragment="content" style="padding-bottom: 50px; padding-top: 120px;">
     <div class="container">
-        <div class="board-page">
-            <div class="board">
+        <div class="notice-page">
+            <div class="notice">
                 <p style="font-size: 35px; font-family: 'GmarketSansMedium'; font-weight: bold;">공지사항</p>
             </div>
 
@@ -61,32 +61,34 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="list : ${bbs}">
+                    <tr th:each="list : ${notice}">
                         <td>
-                            <a th:href="@{boardDetail(board_num=${list.board_num})}" th:text="${list.board_num}"
+                            <a th:href="@{/noticeDetail(notice_num=${list.notice_num})}" th:utext="${list.notice_num}"
                                style="color:black;">
                             </a>
                         </td>
                         <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <a th:href="@{boardDetail(board_num=${list.board_num})}" th:text="${list.board_title}"
+                            <a th:href="@{/noticeDetail(notice_num=${list.notice_num})}" th:utext="${list.notice_title}"
                                style="display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></a>
                         </td>
-                        <td th:text="${list.user_id}"></td>
-                        <td th:text="${#temporals.format(list.board_date, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:utext="${list.user_id}"></td>
+                        <td th:utext="${#temporals.format(list.notice_date, 'yyyy-MM-dd HH:mm')}"></td>
                     </tr>
-                    </thead>
                     </tbody>
                 </table>
             </div>
 
-            <div class="container" th:if="${session.user != null}">
-                <div th:if="${admin != null and admin.admin_role == 1}">
+            <div th:if="${session.user} !=null">
+                <div class="container">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a class="btn btn-primary me-md-2" role="button" id="write-article"
-                           style="background: #2a6a47; color: white; font-weight: 700; border: none;" href="/boardPost">글쓰기</a>
+                           style="background: #2a6a47; color: white; font-weight: 700; border: none;" href="/noticePost">글쓰기</a>
                     </div>
                 </div>
             </div>
+
+            </table>
+        </div>
 
 
         <div class="container">

@@ -7,7 +7,6 @@ $(function loadJQuery() {
     document.getElementsByTagName("head")[0].appendChild(oScript);
 })
 
-
 // 주소 검색기능
 jQuery.noConflict(
     function sample4_execDaumPostcode() {
@@ -76,6 +75,7 @@ flatpickr("#myDateInput", {
             return (date.getDay() === 0 || date.getDay() === 6);
         }
     ],
+    minDate: "today",
     dateFormat: "Y-m-d" // 날짜 형식 설정
 });
 
@@ -96,41 +96,37 @@ upload.addEventListener('change', getImageFiles);
 var inputFileList = new Array();     // 이미지 파일을 담아놓을 배열 (업로드 버튼 누를 때 서버에 전송할 데이터)
 
 function getImageFiles(e) {
-    const uploadFiles = [];
     const files = e.currentTarget.files;
     var filesArr = Array.prototype.slice.call(files);
     const imagePreview = document.querySelector('#img_pickup_preview');
-    const docFrag = new DocumentFragment();
 
     // 업로드 된 파일 유효성 체크
-    if (filesArr.length > 6) {
-        alert("이미지는 최대 6개까지 업로드 가능합니다.");
+    if (filesArr.length > 4) {
+        alert("이미지는 최대 4개까지 업로드 가능합니다.");
         $('input[name=images]').val();
         return;
     }
 
-
-    // 파일 타입 검사
-    [...files].forEach(file => {
+    filesArr.forEach(function(file) {
+        // 파일 타입 검사
         if (!file.type.match("image/.*")) {
             alert('이미지 파일만 업로드가 가능합니다.');
-            return
+            return;
         }
 
         // 파일 갯수 검사
-        if ([...files].length < 7) {
-            uploadFiles.push(file);
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const preview = createElement(e, file);
-                imagePreview.appendChild(preview);
-            };
-            reader.readAsDataURL(file);
+        if (inputFileList.length >= 4) {
+            alert('이미지는 최대 4개까지 업로드 가능합니다.');
+            return;
         }
-    });
 
-    filesArr.forEach(function(f) {
-        inputFileList.push(f);    // 이미지 파일을 배열에 담는다.
+        inputFileList.push(file);    // 이미지 파일을 배열에 담는다.
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const preview = createElement(e, file);
+            imagePreview.appendChild(preview);
+        };
+        reader.readAsDataURL(file);
     });
 
 }
@@ -153,11 +149,13 @@ function createElement(e, file) {
     $(document).ready(function() {
         $(delBtn).click(function () {
             $(li).remove();
+            const fileName = img.getAttribute('data-file');
+            inputFileList = inputFileList.filter((file) => file.name !== fileName); // 배열에서 이미지 파일 제거
         })
     });
+
     return li;
 }
-
 
 // 다음페이지 이동시, 입력값 빈칸 확인
 function chBox() {
@@ -178,9 +176,13 @@ function chBox() {
         pu_img = "N";
     }
     const user_id = $("#pickup_userID").val();
-    const house_no = $("#pickup_house").val();
-    const pu_elevator = $("#pickup_elevator").val();
-    const text_memo = $(".text_memo").val();
+    let house_no = $("#pickup_house").val();
+    let pu_elevator = $("#pickup_elevator").val();
+    let text_memo = $(".text_memo").val();
+    if (text_memo === "") {
+        text_memo = "None";
+    }
+
 
     let formData = new FormData();  // 폼 객체
 
@@ -207,11 +209,11 @@ function chBox() {
         "pu_img": pu_img,
         "text_memo": text_memo
    };
-
+    console.log(formData);
 
     // 필수정보 입력 확인
     if (pu_name === "" || pu_tel === "" || pu_zip === "" || pu_address1 === "" || pu_address2 === "" ||
-        pu_address3 === "" || pu_address4 === "" || pu_day === "") {
+        pu_address3 === "" || pu_address4 === "" || pu_day === "" || house_no === "" || pu_elevator === "") {
         alert("필수 정보를 입력해주세요")
         return false;
     } else if ($("#checkBox_colPersonInfo").is(":checked") === false) {
@@ -219,7 +221,6 @@ function chBox() {
         alert("약관에 동의해주세요");
         return false;
     } else {
-        location.href = "/pickup2"
         $.ajax({
             url:"pickupSave.do",
             type:"post",
@@ -230,19 +231,27 @@ function chBox() {
                     type: "post",
                     data: info,
                     success: function() {
-                        $.ajax({
-                            type: 'post',
-                            url: 'pickupImg.do',
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            enctype: 'multipart/form-data',
-                            cache: false,
-                            success: location.href = "/pickup2",
-                            error: function (xhr, status, error) {
-                                alert("오류가 발생했습니다.\n" + error);
-                            }
-                        })
+                        if (pu_img === "Y" ) {
+                            $.ajax({
+                                type: 'post',
+                                url: 'pickupImg.do',
+                                data: formData,
+                                contentType: false,
+                                processData: false,
+                                enctype: 'multipart/form-data',
+                                cache: false,
+                                success: function() {
+                                    location.href = "/pickup2";
+                                },
+                                error: function (xhr, status, error) {
+                                    alert("오류가 발생했습니다.\n" + error);
+                                }
+                            });
+                        } else {
+                            location.href = "/pickup2";
+                        }
+
+
                     },
                     error: function (xhr, status, error) {
                         alert("오류가 발생했습니다.\n" + error);
@@ -256,82 +265,3 @@ function chBox() {
     }
 
 }
-
-
-
-
-
-// 카테고리 버튼 이벤트
-$(document).ready(function(){
-    $(".btn_recycleCategory_1st").each(function(index) {
-        $(this).attr('menu-index', index);
-    }).click(function(){
-        // 클릭된 <div>의 menu-index 값을 index 변수에 할당한다
-        const index = $(this).attr('menu-index');
-        // 클릭한 <div>에 clicked_menu 클래스 추가
-        $('.btn_recycleCategory_1st[menu-index=' + index + ']').addClass('clicked_menu');
-        // 그 외 <div>는 clicked_menu 클래스 삭제
-        $('.btn_recycleCategory_1st[menu-index!=' + index + ']').removeClass('clicked_menu');
-    });
-});
-
-$(document).ready(function(){
-    $(".btn_recycleCategory_2st").each(function(index2) {
-        $(this).attr('menu-index2', index2);
-    }).click(function(){
-        // 클릭된 <div>의 menu-index 값을 index 변수에 할당한다
-        const index2 = $(this).attr('menu-index2');
-        // 클릭한 <div>에 clicked_menu 클래스 추가
-        $('.btn_recycleCategory_2st[menu-index2=' + index2 + ']').addClass('clicked_menu');
-        // 그 외 <div>는 clicked_menu 클래스 삭제
-        $('.btn_recycleCategory_2st[menu-index2!=' + index2 + ']').removeClass('clicked_menu');
-    });
-});
-
-
-// pickup 두번째 페이지 입력정보 저장
-function pickupSave2() {
-    const category_no = 1;
-    const pu_category_no = $(".count_category").val();
-
-    console.log("카테고리 갯수>>>>>>>>>>>>>"+count_category);
-
-    // 세션 스토리지에 임시 저장
-    sessionStorage.setItem("category_no", category_no);
-    sessionStorage.setItem("pu_category_no", pu_category_no);
-
-    // saveVal = "저장";
-    alert("임시 저장되었습니다")
-
-    // $.ajax({
-    //     url:"pickupSave.do",
-    //     type:"post",
-    //     data:{"user_id":user_id, "pu_name":pu_name, "pu_tel":pu_tel,
-    //     "pu_zip":pu_zip,"pu_address1":pu_address1,"pu_address2":pu_address2,
-    //     "pu_address3":pu_address3,"pu_address4":pu_address4,"house_no":house_no,"pu_elevator":pu_elevator,
-    //     "pu_day":pu_day, "pu_img":pu_img, "text_memo":text_memo},
-    //     success: "",
-    //     error: function() {
-    //         alert('error')
-    //     }
-    // })
-}
-
-
-// pickup 세번째 페이지 입력정보 저장
-function pickupReservation() {
-    $.ajax({
-        url:"pickupRealSave.do",
-        type:"get",
-        success: function() {
-            alert("수거 예약되었습니다.")
-            location="/index"
-        },
-        error: function() {
-            alert('error')
-        }
-    })
-}
-
-
-

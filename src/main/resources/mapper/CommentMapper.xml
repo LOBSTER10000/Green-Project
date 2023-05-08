@@ -6,21 +6,27 @@
 
     <!-- 댓글 리스트 -->
     <select id="selectAllComment" resultType="com.sunny.green.vo.CommentVo">
-        select * from comment where com_num = #{com_num}
+        select * from comment where board_num = #{board_num}
     </select>
 
     <!-- 댓글 수 -->
-    <select id="getCommentTotal" resultType="int">
-        select count(*) from comment where com_num = #{com_num}
+    <select id="commentTotal" resultType="int">
+        select count(*) from comment where board_num = #{board_num}
     </select>
 
     <!-- 댓글 등록 -->
     <insert id="insertComment" useGeneratedKeys="true" keyProperty="com_num">
         insert into comment(user_id, com_content, com_date, board_num) values (#{user_id}, #{com_content}, NOW(), #{board_num})
     </insert>
+    <!-- 특정 댓글 -->
+    <select id="selectComment" resultType="com.sunny.green.vo.CommentVo">
+        select *
+        from comment
+        where com_num = #{com_num}
+    </select>
 
     <!-- 댓글 수정-->
-    <update id="updateComment">
+    <update id="updateComment" useGeneratedKeys="true" keyProperty="com_num">
         update comment
         set com_content = #{com_content}
         where com_num = #{com_num}
@@ -33,4 +39,40 @@
         where com_num = #{com_num}
     </delete>
 
+    <!-- 번호 자동 조정 -->
+    <update id="updateComNum">
+        <selectKey keyProperty="com_num" order="BEFORE">
+            SELECT @num := 0
+        </selectKey>
+        UPDATE comment, (SELECT @num := 0) r
+        SET comment.com_num = (@num := @num + 1)
+    </update>
+
+    <!-- 해당 게시물의 댓글 삭제 -->
+    <delete id="deleteCommentByBoardNum" parameterType="int">
+        DELETE FROM comment WHERE board_num = #{board_num}
+    </delete>
+
+
+    <select id="myPageComment" resultType="com.sunny.green.vo.CommentVo">
+        select * from comment where user_id = #{user_id} order by com_num desc limit 0,8;
+    </select>
+
+    <select id="selectAllComments" resultType="com.sunny.green.vo.CommentVo">
+        select * from comment where user_id = #{user_id};
+    </select>
+
+    <!--    rsList 검색  -->
+    <select id="searchComment" resultType="com.sunny.green.vo.CommentVo">
+        SELECT *
+        FROM board
+        <where>
+            <if test="searchType=='com_content' and searchValue != null and searchValue != '' ">
+                AND com_content like CONCAT('%', #{searchValue}, '%')
+            </if>
+            <if test="searchType=='user_id' and searchValue != null and searchValue != '' ">
+                AND user_id like CONCAT('%', #{searchValue}, '%')
+            </if>
+        </where>
+    </select>
 </mapper>

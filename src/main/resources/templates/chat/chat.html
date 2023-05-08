@@ -30,7 +30,7 @@
     let user_id= cur_session;
 
     $(function () {
-        const websocket = new WebSocket("ws://localhost:8080/ws/chat");
+        const websocket = new WebSocket("ws://15.165.155.88:8080/ws/chat");
 
         websocket.onmessage = onMessage;
         websocket.onopen = onOpen;
@@ -67,12 +67,17 @@
         }
 
         function onMessage(msg) {
+            // 웹소켓으로부터 받은 데이터 할당
             let data = msg.data;
+            // 변수 초기화
             let user_id = null; // 데이터를 보낸 사람
-            let message = null;
+            let message = null; // 메세지
+
+            // 구분자 : 로 문자열 나누어 arr 배열에 저장
             let arr = data.split(":");
 
-            for (var i = 0; i < arr.length; i++) {
+            //데이터 잘 받았는지 확인하여 콘솔에 찍어봄
+            for (let i = 0; i < arr.length; i++) {
                 console.log('arr[' + i + ']: ' + arr[i]);
             }
 
@@ -88,11 +93,11 @@
                 message = arr[1].trim(); // trim은 공백을 없애줌
             }
 
-            if (message == "님이 입장했습니다.") {
+            if (message === "님이 입장했습니다.") {
                 message = user_id + "님이 입장했습니다.";
             }
 
-            if (message == undefined) {
+            if (message === undefined) {
                 message = "채팅이 종료되었습니다.";
             }
 

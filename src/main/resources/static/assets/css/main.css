@@ -1667,7 +1667,7 @@ p.testimonial-body {
     letter-spacing: -0.3px;
 }
 
-.notice_area .notice_list li p {
+.notice_area .notice_list li a {
     width: calc(100% - 100px);
     float: left;
     overflow: hidden;
@@ -1677,7 +1677,7 @@ p.testimonial-body {
     font-weight: 600;
 }
 
-.notice_area .notice_list li p a {
+.notice_area .notice_list li a {
     color: #686868;
 }
 

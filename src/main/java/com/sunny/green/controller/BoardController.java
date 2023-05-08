@@ -23,15 +23,11 @@ import java.util.List;
 @Log4j2
 public class BoardController {
 
-
     private final BbsDao bd;
-
-
-    private final UserDao ud;
 
     private final CommentDao cd;
 
-    // Q&A 목록
+    // 목록
     @GetMapping("/board")
     public String index(Model model) {
         List<BbsVo> bbs = bd.selectBoardAll();
@@ -68,46 +64,32 @@ public class BoardController {
     }
 
     // Q&A 글 상세조회
-    @GetMapping("/boardDetail") // 경로 변수 {boardNum}을 사용하도록 수정
+    @GetMapping("/boardDetail")
     public String boardDetail(Model model, CommentVo commentVo, BbsVo bbsVo, HttpSession session, int board_num) {
-        BbsVo bbs = bd.selectBoard(board_num); // boardNum 변수로 수정
+        BbsVo bbs = bd.selectBoard(board_num);
         model.addAttribute("bbs", bbs);
         log.info(bbs);
         session.getAttribute("user");
         model.addAttribute("board_num", board_num);
 
         // 댓글 조회
-        // List<CommentVo> com = cd.selectAllComment();
-        // model.addAttribute("comment", commentVo);
-        // CommentVo commentVo1= (CommentVo) session.getAttribute("comment");
+        List<CommentVo> com = cd.selectAllComment(board_num);
+        log.info("com>>>>>>"+com);
+        model.addAttribute("com", com);
+
+        // 댓글 총 개수 조회
+        int commentCount = cd.commentTotal(board_num);
+        model.addAttribute("commentCount", commentCount);
 
         return "bbs/boardDetail";
     }
-
-
-//    @GetMapping("/boardDetail")
-//    public String boardDetail(Model model, CommentVo commentVo, BbsVo bbsVo, HttpSession session, @PathVariable("board_num") int boardNum) {
-//        BbsVo bbs = bd.selectBoard(bbsVo.getBoard_num());
-//        model.addAttribute("bbs", bbs);
-//        System.out.println(bbs);
-//        session.getAttribute("user");
-//        model.addAttribute("board_num", boardNum);
-//
-//        //댓글 조회
-////        List<CommentVo> com = cd.selectAllComment();
-////        model.addAttribute("comment", commentVo);
-////        CommentVo commentVo1= (CommentVo) session.getAttribute("comment");
-//
-//        return "bbs/boardDetail";
-//
-//    }
 
     // Q&A 글 수정/삭제 폼
     @GetMapping("/updateBoard1")
     public String updateBoard1(BbsVo bbsVo, Model model, int board_num, HttpSession session1) {
         BbsVo bbs = bd.selectBoard(bbsVo.getBoard_num());
         model.addAttribute("bbs", bbs);
-        return "bbs/boardUpdate";
+            return "bbs/boardUpdate";
     }
 
     // Q&A 글 수정
@@ -124,10 +106,22 @@ public class BoardController {
     // Q&A 글 삭제
     @GetMapping("/deleteBoard")
     public String deleteBoard(int board_num) {
-        int str = bd.deleteBoard(board_num);
-        int str1 = bd.updateBoardNum();
+        // 해당 게시글에 속한 댓글 삭제
+        cd.deleteCommentByBoardNum(board_num);
+
+        // 게시글 삭제
+        bd.deleteBoard(board_num);
+        bd.updateBoardNum();
+
         return "redirect:board";
     }
+
+
+
+
+
+
+
 
 
 }

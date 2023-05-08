@@ -51,28 +51,19 @@
           <div class="container">
             <!--  품목 선택 preview 세부 title  -->
             <table style="border: 2px solid #d5d2d2; margin-top: 40px; width: 92%; margin-left: 4%;">
-              <tr style="border-bottom: 2px solid #d5d2d2; height: 65px;">
-                <td class="col-4" style="border-right: 2px solid #d5d2d2">
-                  <div class="text_cateSelectTitle2">대분류</div>
-                </td>
-                <td class="col-4" style="border-right: 2px solid #d5d2d2">
-                  <div class="text_cateSelectTitle2">소분류</div>
-                </td>
-                <td class="col-4" style="border-right: 2px solid #d5d2d2">
-                  <div class="text_cateSelectTitle2">수량</div>
-                </td>
-              </tr>
-              <tr style="height: 65px;">
-                <td class="col-4" style="border-right: 2px solid #d5d2d2; font-family: NanumBarunGothic, serif;">
-                  <div class="text_mainCategory_preview">세탁기</div>
-                </td>
-                <td class="col-4" style="border-right: 2px solid #d5d2d2; font-family: NanumBarunGothic, serif;">
-                  <div class="text_detailCategory_preview"><input type="text" name="" /></div>
-                </td>
-                <td class="col-4" style="border-right: 2px solid #d5d2d2; text-align: center; font-size: 25px; color: black; font-family: NanumBarunGothic, serif;">
-<!--                  <div th:value="${session.param.pu_category_no}">1</div>-->
-                </td>
-              </tr>
+              <thead>
+                <tr style="border-bottom: 2px solid #d5d2d2; height: 65px;">
+                  <td class="col-4" style="border-right: 2px solid #d5d2d2">
+                    <div class="text_cateSelectTitle2">상세 분류</div>
+                  </td>
+                  <td class="col-4" style="border-right: 2px solid #d5d2d2">
+                    <div class="text_cateSelectTitle2">수량</div>
+                  </td>
+                </tr>
+              </thead>
+              <tbody id="previewCategory">
+
+              </tbody>
             </table>
           </div>
         </div>
@@ -98,7 +89,7 @@
                   <span class="text_requiredInput">*</span>
                 </td>
                 <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <input id="username" type="text" name="pickup_name" th:value="${session.address.pu_address_name}" style="width: 300px; height: 40px; margin-left: 20px;" readonly>
+                  <input id="username" type="text" name="pickup_name" th:value="${session.address.pu_address_name}" style="width: 300px; height: 40px; margin-left: 20px; font-size: 20px;" readonly>
                 </td>
               </tr>
               <!--   전화번호  -->
@@ -108,7 +99,7 @@
                   <span class="text_requiredInput">*</span>
                 </td>
                 <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <input type="text" name="pickup_phone" th:value="${session.address.pu_address_tel}" style="width: 300px; height: 40px; margin-left: 20px;" readonly>
+                  <input type="text" name="pickup_phone" th:value="${session.address.pu_address_tel}" style="width: 300px; height: 40px; margin-left: 20px; font-size: 20px;" readonly>
                 </td>
               </tr>
               <!--   배출 주소  -->
@@ -117,7 +108,7 @@
                   <span class="text_contentHeader">배출 주소</span>
                   <span class="text_requiredInput">*</span>
                 </td>
-                <td class="col-10 box_address" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif;">
+                <td class="col-10 box_address" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif; font-size: 17px;">
                   <input type="text" name="pickup_zip_code" id="sample4_postcode" th:value="${session.address.pu_address_zip}" placeholder="${session.pu_zip}" readonly><br>
                   <input type="text" name="pickup_address1" id="sample4_roadAddress" th:value="${session.address.pu_address1}" placeholder="${session.pu_address1}" readonly>
                   <input type="text" name="pickup_address2" id="sample4_jibunAddress" th:value="${session.address.pu_address2}" placeholder="${session.pu_address2}" readonly><br>
@@ -128,19 +119,25 @@
               </tr>
               <!--   주거 구분  -->
               <tr>
-                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px; padding: 30px;">
-                  <div class="text_contentHeader">주거 구분</div>
+                <td class="col-2" style="border: 1px solid #c1baba; text-align: center; font-size: 20px;">
+                  <span class="text_contentHeader">주거 구분</span>
+                  <span class="text_requiredInput">*</span>
                 </td>
-                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
+                <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif; font-size: 20px; height: 85px;">
                   <div style="display:flex; margin-left: 20px;">
                     <div>주거형태</div>
-                    <select name="pickup_house" title="주거형태 선택" style="margin-left: 10px; margin-right: 20px;">
-                      <option th:value="${session.info.house_no}"></option>
+                    <select name="pickup_house" title="주거형태 선택" style="margin-left: 10px; margin-right: 20px;" readonly>
+                      <option th:selected="${session.info.house_no==1}" value="단층주택">단층주택</option>
+                      <option th:selected="${session.info.house_no==2}" value="연립주택">연립주택</option>
+                      <option th:selected="${session.info.house_no==3}" value="아파트">아파트</option>
+                      <option th:selected="${session.info.house_no==4}" value="빌딩">빌딩</option>
                     </select>
-                    <div>엘레베이터 유무</div>
-                    <select name="pickup_elevator" title="엘레베이터유무 선택" style="margin-left: 10px; margin-right: 20px;">
-                      <option th:value="${session.info.pu_elevator}"></option>
+                    <div>엘리베이터 유무</div>
+                    <select name="pickup_elevator" title="엘리베이터유무 선택" style="margin-left: 10px; margin-right: 20px;" readonly>
+                      <option th:selected="${session.info.pu_elevator=='Y'}" value="있음">있음</option>
+                      <option th:selected="${session.info.pu_elevator=='N'}" value="없음">없음</option>
                     </select>
+
                   </div>
                 </td>
               </tr>
@@ -151,8 +148,8 @@
                   <span class="text_requiredInput">*</span>
                 </td>
                 <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <div style="display:flex; margin-left: 20px;">
-                    지정일: <span style="font-size: 20px;" th:value="${session.info.pu_day}"></span>
+                  <div style="display:flex; margin-left: 20px; font-size: 20px;">
+                    지정일: [[${session.info.pu_day}]]
                   </div>
                 </td>
               </tr>
@@ -162,10 +159,7 @@
                   <div class="text_contentHeader">참고 사진</div>
                 </td>
                 <td class="col-10" style="border: 1px solid #c1baba; padding: 10px; font-family: NanumBarunGothic, serif;">
-                  <div>
-                    <ul id="img_pickup_preview" th:value="${session.info.pu_img}">
-                      <img src="/img/pickup/computer.png" alt="예시">
-                    </ul>
+                  <div id="img_pickup_preview" style="height: 150px; margin: 15px;">
                   </div>
                 </td>
               </tr>
@@ -175,8 +169,7 @@
                   <div class="text_contentHeader">메모</div>
                 </td>
                 <td class="col-10" style="border: 1px solid #c1baba; padding: 30px; font-family: NanumBarunGothic, serif;">
-                  <div style="display:flex;">
-                    <textarea class="text_memo" name="pickup_memo" th:value="${session.info.text_memo}" readonly></textarea>
+                  <div id="text_memo_div" style="display:flex;">
                   </div>
                 </td>
               </tr>
@@ -187,8 +180,7 @@
         <div class="container">
           <div class="box_pageMove">
             <a href="/pickup2" class="btn btn-outline-success">이전</a>
-<!--            <input type="submit" class="btn btn-outline-success" value="제출하기">-->
-            <input type="button" onclick="pickupReservation()" value="제출하기">
+            <a href="/pickupRealSave" class="btn btn-outline-success">접수하기</a>
           </div>
         </div>
     </div>
@@ -199,4 +191,97 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script src="/js/pickUp3.js"></script>
+<script th:inline="javascript">
+  // 모델에서 items 값을 가져옵니다
+  const items = [[${items}]];
+  const previewBody = document.querySelector('#previewCategory');
+
+  // items 리스트를 순회하며, tr 태그를 생성하고 previewBody에 추가합니다
+  items.forEach(item => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+            <td class="col-4" style="border-right: 2px solid #d5d2d2; font-family: NanumBarunGothic, serif;">
+                <div class="text_detailCategory_preview">${item.categoryVal}</div>
+            </td>
+            <td class="col-4"
+                style="border-right: 2px solid #d5d2d2; text-align: center; font-size: 25px; color: black; font-family: NanumBarunGothic, serif;">
+                <div>${item.countVal}</div>
+            </td>
+        `;
+    tr.setAttribute('style', 'height: 65px; border-bottom: 2px solid #d5d2d2;'); // 스타일 속성 추가
+    previewBody.appendChild(tr);
+  });
+
+  const text_memo = [[${session.info.text_memo}]];
+  const previewMemo = document.querySelector('#text_memo_div');
+
+  if (text_memo === 'None') {
+    const ta = document.createElement('textarea');
+    ta.innerHTML = `
+        `;
+    ta.setAttribute('class', 'text_memo');
+    ta.setAttribute('name', 'pickup_memo');
+    ta.setAttribute('readOnly', true);
+    previewMemo.appendChild(ta);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.innerHTML = `${text_memo}
+        `;
+    ta.setAttribute('class', 'text_memo');
+    ta.setAttribute('name', 'pickup_memo');
+    ta.setAttribute('readOnly', true);
+    previewMemo.appendChild(ta);
+  }
+
+  // const imgView = [[${pickupImg}]];
+  // const previewImg = document.querySelector('#imgPreview');
+  // if (imgView === "None") {
+  //
+  // } else {
+  //   imgView.forEach(img => {
+  //     const ul = document.createElement('ul');
+  //     ul.innerHTML = `
+  //         <img src="${img.pu_img_path}" alt="이미지">
+  //         `;
+  //     ul.setAttribute('id', 'img_pickup_preview');
+  //     previewImg.appendChild(ul);
+  //   });
+  // }
+
+  // const imgView = JSON.parse(`[[${pickupImg}]]`);
+  // const previewImg = document.querySelector('#img_pickup_preview');
+  // // 이미지가 없을 경우 처리
+  // imgView.forEach(img => {
+  //   const ul = document.createElement('ul');
+  //   ul.innerHTML = `
+  //     <li class="img_list">
+  //       <img src="${img.pu_img_path}" alt="이미지">
+  //     </li>
+  //     `;
+  //   ul.setAttribute('id', 'img_pickup_preview');
+  //   previewImg.appendChild(ul);
+  // });
+
+
+  // 첨부 이미지 preview
+  const imgView = JSON.parse(`[[${pickupImg}]]`);
+  const previewImg = document.querySelector('#img_pickup_preview');
+  function createElement() {
+    imgView.forEach(pickupImg => {
+      const li = document.createElement('li');
+      const img = document.createElement('img');
+
+      img.setAttribute('src', `${pickupImg.pu_img_path}`);
+      img.setAttribute('data-file', `${pickupImg.pu_img_origin_name}`);
+      img.setAttribute('style', 'margin-left: 10px;');
+      li.appendChild(img);
+      li.id = "img_list";
+      previewImg.appendChild(li);
+    });
+  }
+  createElement();
+
+
+
+</script>
 </html>

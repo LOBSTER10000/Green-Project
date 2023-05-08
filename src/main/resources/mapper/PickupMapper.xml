@@ -22,9 +22,48 @@
         Insert into pickup_category(pu_no, category_no, pu_category_count)
         values (#{pu_no}, #{category_no}, #{pu_category_count})
     </insert>
-    <insert id="pickupImgSave">
-        Insert into pickup_img(pu_no, pu_img_origin_name, pu_img_save_name, pu_img_path)
-        values (#{pu_no}, #{pu_img_origin_name}, #{pu_img_save_name}, #{pu_img_path})
+    <insert id="pickupImgSave" useGeneratedKeys="true" keyProperty="pu_img_no">
+        Insert into pickup_img(pu_img_origin_name, pu_img_save_name, pu_img_path)
+        values (#{pu_img_origin_name}, #{pu_img_save_name}, #{pu_img_path})
+        <selectKey keyProperty="pu_img_no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
     </insert>
+    <update id="pickupImgUpdate">
+        UPDATE pickup_img set pu_no = #{pu_no} where pu_img_no = #{pu_img_no}
+    </update>
+    <select id="pickupImgView" resultType="com.sunny.green.vo.PickupImgVo">
+        SELECT * from pickup_img where pu_img_no = #{pu_img_no};
+    </select>
 
+    <!--   admin_rs 에서 모든 예약자정보를 가져옴 -->
+    <select id="rsList" resultType="com.sunny.green.vo.PickupDetailVo">
+        SELECT * FROM pickup_info;
+    </select>
+
+    <!--    rsList 검색  -->
+    <select id="rsList2" resultType="com.sunny.green.vo.PickupDetailVo">
+        SELECT *
+        FROM pickup_info
+        <where>
+            <if test="searchType_rs=='pu_day' and searchValue_rs != null and searchValue_rs != '' ">
+                AND pu_day like CONCAT('%', #{searchValue_rs}, '%')
+            </if>
+            <if test="searchType_rs=='pu_date' and searchValue_rs != null and searchValue_rs != '' ">
+                AND pu_date like CONCAT('%', #{searchValue_rs}, '%')
+            </if>
+            <if test="searchType_rs=='user_id' and searchValue_rs != null and searchValue_rs != '' ">
+                AND user_id like CONCAT('%', #{searchValue_rs}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--    예약자상세조회-->
+    <select id="rs_info" resultType="com.sunny.green.vo.PickupDetailVo">
+        SELECT * FROM pickup_info LEFT JOIN pickup_address ON pickup_info.pu_address_no = pickup_address.pu_address_no JOIN pickup_img ON pickup_info.pu_no = pickup_img.pu_no;
+    </select>
+
+    <select id="myPageReservation" resultType="com.sunny.green.vo.PickupDetailVo">
+        select * from pickup_info where user_id = #{user_id} order by pu_no desc limit 0,4;
+    </select>
 </mapper>

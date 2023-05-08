@@ -45,4 +45,47 @@
         UPDATE board, (SELECT @num := 0) r
         SET board.board_num = (@num := @num + 1)
     </update>
+
+<!--    &lt;!&ndash; 게시글과 해당 댓글들을 함께 삭제 &ndash;&gt;-->
+<!--    <delete id="deleteBoardWithComments">-->
+<!--        &lt;!&ndash; 해당 게시글의 댓글을 삭제 &ndash;&gt;-->
+<!--        DELETE FROM comment WHERE board_num = #{board_num}-->
+<!--        &lt;!&ndash; 해당 게시글 삭제 &ndash;&gt;-->
+<!--        DELETE FROM board WHERE board_num = #{board_num}-->
+<!--    </delete>-->
+
+    <!--    &lt;!&ndash; 번호 자동 조정 &ndash;&gt;-->
+    <!--    <update id="updateBoardNum">-->
+    <!--        <selectKey keyProperty="board_num" order="BEFORE">-->
+    <!--            SELECT @num := 0-->
+    <!--        </selectKey>-->
+    <!--        UPDATE board, (SELECT @num := 0) r-->
+    <!--        SET board.board_num = (@num := @num + 1)-->
+    <!--    </update>-->
+
+    <select id="selectAllBoard" resultType="com.sunny.green.vo.BbsVo">
+        select * from board;
+    </select>
+
+    <select id="selectAllBoard2" resultType="com.sunny.green.vo.BbsVo">
+        select * from board where user_id = #{user_id};
+    </select>
+
+    <!--    rsList 검색  -->
+    <select id="searchBoard" resultType="com.sunny.green.vo.BbsVo">
+        SELECT *
+        FROM board
+        <where>
+            <if test="searchType=='board_title' and searchValue != null and searchValue != '' ">
+                AND board_title like CONCAT('%', #{searchValue}, '%')
+            </if>
+            <if test="searchType=='user_id' and searchValue != null and searchValue != '' ">
+                AND user_id like CONCAT('%', #{searchValue}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="myPageBoard" resultType="com.sunny.green.vo.BbsVo">
+        select * from board where user_id = #{user_id} order by board_num desc limit 0,8;
+    </select>
 </mapper>

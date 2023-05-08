@@ -7,68 +7,230 @@
     <meta charset="UTF-8">
     <title> 관리자페이지 </title>
     <link rel="stylesheet" type="text/css" href="/css/admin_bbs1.css">
-    <script src="/js/admin_bbs1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>
+        let content;
+
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/pagination_board_page', // 데이터를 가져올 URL_
+                type: 'post',
+                dataType: "json",
+                success: function (data) { // 데이터를 가져온 후 실행할 콜백 함수
+                    console.log(data); // 데이터 확인용
+                    content = data;
+                    console.log(data);
+                    getData(1);
+                },
+                error: function (e) {
+                    console.log("ERROR: ", e);
+                }
+            });
+        });
+
+
+
+        // 페이징 처리
+        function pageLink(currentPage, totalPage, funName){
+            // pageLink 설정하기(?)
+            let pageUrl = "";
+            let pageLimit = 5;
+            let startPage = parseInt((currentPage - 1) / pageLimit) * pageLimit + 1;
+            let endPage = startPage - 1 + pageLimit ;
+
+            if (totalPage < endPage) {
+                endPage = totalPage;
+            }
+
+            let nextPage = endPage + 1;
+
+            //page test
+            console.log(currentPage,"curPage,",startPage,"startPage,", endPage,"endPage,",nextPage,"nextPage");
+
+            <!-- href="javascript:showNumber()" 링크 클릭시 함수실행을 시켜줌-->
+
+            //맨 첫 페이지
+            if (currentPage > 1 && pageLimit < currentPage) {
+                pageUrl += "<a class='page first' href='javascript:" + funName + "(1);'><li className=\"page-item\"></a>";
+            }
+            //이전 페이지
+            if (currentPage > pageLimit) {
+                pageUrl += " <a class='page prev' href='javascript:" + funName + "(" + (startPage == 1 ? 1 : startPage - 1) + ");'><li className=\"page-item\"></a>";
+            }
+            //~pageLimit 맞게 페이지 수 보여줌
+            for (var i = startPage; i <= endPage; i++) {
+                //현재페이지면 진하게 표시
+                if (i == currentPage) {
+                    pageUrl += " <a href='#'><strong>" + i + "</strong></a>"
+                } else {
+                    pageUrl += " <a href='javascript:" + funName + "(" + i + ");'> " + i + " </a>";
+                }
+            }
+
+            //다음 페이지
+            if (nextPage <= totalPage) {
+                pageUrl += "<a class='page next' href='javascript:" + funName + "(" + (nextPage < totalPage ? nextPage : totalPage) + ");'><li className=\"page-item\"></a>";
+            }
+            //맨 마지막 페이지
+            if (currentPage < totalPage && nextPage < totalPage) {
+                pageUrl += "<a class='page last' href='javascript:" + funName + "(" + totalPage + ");'><li className=\"page-item\"></a>";
+            }
+            //pageUrl_ test
+            console.log(pageUrl);
+            // 현재 페이지 번호를 업데이트합니다.
+
+            $('#pagingul').html(pageUrl);
+            // cur를 붙여야하나 아니면 pageUrl 을 붙여야하나 해봐야함
+            return pageUrl;
+
+
+        }
+        function getData(num) {
+            // 한페이지에 10개를 보여주기 위한 함수 설정
+            let itemsPerPage = 10;  // 한 페이지에 보여줄 데이터의 수
+            let currentPage = num;    // 현재 페이지 번호
+            let startIndex = (currentPage - 1) * itemsPerPage;  // 시작 데이터 인덱스
+            let endIndex = startIndex + itemsPerPage;          // 끝 데이터 인덱스
+            // page =1 이면  0~9 >> 10~19 >> ...
+
+            let  userTable = $("#t_body"); //t_body 변수 지정
+            // 이전 데이터를 모두 지우고
+
+            //페이징처리 ----
+            let totalPage = Math.ceil(content.length / itemsPerPage);  // 총 페이지 수
+            // pageLink(현재페이지, 전체페이지, 호출할 함수이름)  // --------- 해결해야함 !!
+            let htmlStr = pageLink(currentPage, totalPage, "getData");
+            // common.js - pageLink
+            $("#div_paginate").html(htmlStr);  // --------- 해결해야함 !!
+
+            $('#t_body').empty();
+            // 데이터를 테이블에 추가
+            $.each(content, function(i, item) {
+                if (i >= startIndex && i < endIndex) {
+                    userTable.append(
+                        '<tr>' +
+                        '<td><a href="/boardDetail?board_num=' + item.board_num + '">' + item.board_num + '</td>' +
+                        '<td>' + item.board_title + '</td>' +
+                        '<td>' + item.user_id + '</td>' +
+                        '<td>' + item.board_date + '</td>' +
+                        '</tr>'
+                    );
+                }
+            });
+
+        } // data 10개씩 끊어오는 함수
+    </script>
+
 </head>
 <body>
 
 <div layout:fragment="admin_content">
     <div class="container" style="margin-top: 15px;">
 
-
         <div>
             <h1>게시판 관리</h1>
         </div>
         <div>
-            <ul id="list1">
-                <li><a href="/admin/bbs1" style="color: #e6e6e6;">공지사항</a></li>
-                <li><a href="/admin/bbs2" style="margin-left: 15px;">QNA</a></li>
-            </ul>
-            <div>
-                <form action="bbs_search2" method="get">
-                    <div style="float: right; margin-bottom: 15px;">
-                        <input type="text" placeholder="search..." id="searched1">
-                        <input type="submit" value="검색" id="searched2">
-                    </div>
-                    <table style="width: 100%;">
-                        <tr style="background: #e6e6e6; height: 50px; border-bottom: 1px solid black; text-align:center;">
-                            <td><input type="checkbox" class="checkbox_all"></td>
-                            <td style="width: 10%; font-weight: 700;">NO.</td>
-                            <td style="width: 40%; font-weight: 700;">제목</td>
-                            <td style="font-weight: 700;">작성자</td>
-                            <td style="width: 25%; font-weight: 700;">작성일</td>
-                        </tr>
-                        <tr style="height: 30px; border-bottom: 1px solid #e6e6e6; text-align:center;">
-                            <td><input type="checkbox" class="checkbox_item"></td>
-                            <td>2</td>
-                            <td>[QNA]3</td>
-                            <td>4</td>
-                            <td>5</td>
-                        </tr>
-                    </table>
-                </form>
+        <ul id="list1">
+            <li><a href="/admin/bbs1" style="margin-left: 15px; color: #e6e6e6;"> 공지사항</a></li>
+            <li><a href="/admin/bbs2">QNA</a></li>
+        </ul>
+
+        <br>
+        <div class="search-form" style="display: flex;">
+            <div class="col" style="display: flex;">
+                <select class="form-select" name="searchType" id="validationCustom04" required >
+                    <option selected disabled value="">검색유형</option>
+                    <option th:value="board_title"> 타이틀 </option>
+                    <option th:value="user_id" > 아이디 </option>
+                </select>
+                <div class="invalid-feedback">
+                    Please select a valid state.
+                </div>
             </div>
-
-            <!--페이징 부분 -->
-            <div class="row" style="margin-top: 20px;">
-                <nav id="pagination" aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item"><a class="page-link" href="#">이전</a></li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">다음</a></li>
-                    </ul>
-                </nav>
+            <div class="col-lg-8 col-md-6 col-sm-12 p-0">
+                <input type="text" placeholder="검색어..." class="form-control"
+                       name="searchValue">
             </div>
-
-            <!-- -->
-
-            <div>
-                <input type="button" value="삭제" id="delete">
+            <div class="col-lg-1 col-md-3 col-sm-12 p-0">
+                <button class="btn btn-base submitBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round"
+                         class="feather feather-search">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
             </div>
-
         </div>
+        <br>
 
+        <!--   rsLisr table-->
+        <div class="admin_rsList">
+            <table class="table caption-top">
+                <thead>
+                <!-- 테이블 상단------------------->
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">아이디</th>
+                    <th scope="col">날짜</th>
+                </tr>
+                </thead>
+                <!--   받아오는 데이터 값 ------------------->
+                <tbody id="t_body">
+                <tr th:each="list: ${bbsVos}" style="word-break: keep-all; vertical-align: middle;" >
+
+                    <td th:utext="${list.board_num}"></td>
+                    <td th:utext="${list.board_title}"></td>
+                    <td th:utext="${list.user_id}"></td>
+                    <td th:utext="${#temporals.format(list.board_date, 'yyyy-MM-dd HH:mm')}"></td>
+
+
+                </tr>
+                </tbody>
+            </table>
+
+
+            <!----- 페이징 ----->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" id="pagingul">
+
+                    </li>
+                </ul>
+            </nav>
+        </div>
+            <script>
+                $('.submitBtn').click(function () {
+                    let type = $('select[name=searchType]').val();
+                    let value = $('input[name=searchValue]').val();
+
+                    $.ajax({
+                        url: '/pagination_board_page', // 데이터를 가져올 URL_
+                        type: 'post',
+                        dataType: "json",
+                        data:{"searchType":type,"searchValue":value},
+                        success: function (data) { // 데이터를 가져온 후 실행할 콜백 함수
+                            console.log(data); // 데이터 확인용
+                            console.log("데이터" + data);
+                            console.log("타입" + type);
+                            console.log("밸류" + value);
+                            getData(1);
+                        },
+                        error: function (e) {
+                            console.log("ERROR: ", e);
+                        }
+                    });
+                });
+            </script>
+    </div>
 
     </div>
+
 </div>
 
 </body>

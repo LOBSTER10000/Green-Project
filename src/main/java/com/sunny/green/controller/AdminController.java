@@ -1,17 +1,18 @@
 package com.sunny.green.controller;
 
-import com.sunny.green.dao.AdminDao;
-import com.sunny.green.dao.UserDao;
+import com.sunny.green.dao.*;
 import com.sunny.green.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -27,9 +28,10 @@ import java.util.UUID;
 public class AdminController {
 
     private final UserDao ud;
-
     private final AdminDao ad;
-
+    private final PickupDao pd;
+    private final NoticeDao nd;
+    private final BbsDao bd;
 
     @GetMapping("/admin")
     public String admin() {
@@ -64,22 +66,14 @@ public class AdminController {
     }
 
 
-    @GetMapping("/admin/reservation")
-    public String adminRe() {
-        return "admin/admin_reservation";
-    }
+
 
     @GetMapping("/admin/user1")
     public String adminUs1() {
         return "admin/admin_user1";
     }
 
-    public String getUserList(Model model) {
-        List<UserVo> user = ud.selectAll();
-        model.addAttribute("user", user);
-        return "admin/admin_user2";
-    }
-
+    // 검색
     @GetMapping("/admin/user2")
     public String getUserList(Model model, PageVo search
             , @RequestParam(required = false) String searchType
@@ -92,6 +86,19 @@ public class AdminController {
         }
         model.addAttribute("user", user);
         return "admin/admin_user2";
+    }
+
+    @PostMapping("/pagination")
+    @ResponseBody
+    public List<UserVo> getUserData(PageVo search, @RequestParam(required = false) String searchType, @RequestParam(required = false) String searchValue) {
+        List<UserVo> user;
+        if (searchType == null || searchValue == null) {
+            user = ud.selectAll();
+        } else {
+            user = ud.selectAll2(search, searchType, searchValue);
+        }
+        System.out.println(">>>>>>>>>>>>>"+user);
+        return user;
     }
 
     // 보영 (회원정보상세)
@@ -114,22 +121,13 @@ public class AdminController {
         return "alert";
     }
 
+
     @GetMapping("admin/delete")
     public String deleteUser(@RequestParam("user_id") String user_id) {
         log.info("번호 :" + user_id);
         int deleteUser = ud.deleteId(user_id);
         log.info(deleteUser);
-        return "redirect:admin/user2";
-    }
-
-    @GetMapping("/admin/bbs1")
-    public String bbs1() {
-        return "admin/admin_bbs1";
-    }
-
-    @GetMapping("/admin/bbs2")
-    public String bbs2() {
-        return "admin/admin_bbs2";
+        return "redirect:user2";
     }
 
     @GetMapping("admin/product1")
@@ -180,7 +178,7 @@ public class AdminController {
     @PostMapping("/product3")
     public String pro4(ProductVo productVo, @RequestParam("image") MultipartFile imageFile) {
         String fileName = imageFile.getOriginalFilename(); // 파일 이름 추출
-        String uploadPath = "/home/ubuntu/greentopia/img/product/"; // 업로드 디렉토리 경로
+        String uploadPath = "/home/ubuntu/greentopia2/img/product/"; // 업로드 디렉토리 경로
         String filePath = uploadPath + fileName; // 저장될 파일 경로
         String uuid = UUID.randomUUID().toString();
         String realPath = uploadPath + uuid + fileName;
@@ -202,6 +200,115 @@ public class AdminController {
             e.printStackTrace();
         }
         return "redirect:admin";
+    }
+//   ---------------------------------- rs
+
+    // 게시판_검색 및 데이터 불러오기
+    @GetMapping("/admin/bbs1")
+    public String getNoticeList(Model model, PageVo search ,@RequestParam(required = false) String searchType ,@RequestParam(required = false) String searchValue) throws Exception {
+        List<NoticeVo> noticeVos;
+        if (searchType == null || searchValue == null) {
+            noticeVos = nd.selectAllNotice();
+            log.info(noticeVos);
+        } else {
+            noticeVos = nd.searchNotice(search, searchType, searchValue);
+            log.info(noticeVos);
+        }
+        model.addAttribute("noticeVos", noticeVos);
+        return "admin/admin_bbs1";
+    }
+
+    @PostMapping("/pagination_notice_page")
+    @ResponseBody
+    public List<NoticeVo> getNoticeInfo(PageVo search, @RequestParam(required = false) String searchType, @RequestParam(required = false) String searchValue) {
+        List<NoticeVo> noticeVos;
+        if (searchType == null || searchValue == null) {
+            noticeVos = nd.selectAllNotice();
+
+        } else {
+            noticeVos = nd.searchNotice(search, searchType, searchValue);
+            log.info(noticeVos);
+        }
+        log.info(">>>>>>>>>>>>>"+noticeVos);
+        return noticeVos;
+    }
+
+    // rs_검색 및 데이터 불러오기
+    @GetMapping("/admin/bbs2")
+    public String getBbsList(Model model, PageVo search, @RequestParam(required = false) String searchType, @RequestParam(required = false) String searchValue) throws Exception {
+        List<BbsVo> bbsVos;
+        if (searchType == null || searchValue == null) {
+            bbsVos = bd.selectAllBoard();
+            log.info(bbsVos);
+        } else {
+            bbsVos = bd.searchBoard(search, searchType, searchValue);
+            log.info(bbsVos);
+        }
+        model.addAttribute("bbsVos", bbsVos);
+        return "admin/admin_bbs2";
+    }
+    // rs_페잉징
+    @PostMapping("/pagination_board_page")
+    @ResponseBody
+    public List<BbsVo> getBbsInfo(PageVo search, @RequestParam(required = false) String searchType, @RequestParam(required = false) String searchValue) {
+        List<BbsVo> bbsVos;
+        if (searchType == null || searchValue == null) {
+            bbsVos = bd.selectAllBoard();
+            log.info(bbsVos);
+
+        } else {
+            bbsVos = bd.searchBoard(search, searchType, searchValue);
+            log.info(bbsVos);
+
+        }
+        return bbsVos;
+    }
+
+    // rs_검색 및 데이터 불러오기
+    @GetMapping("/admin/reservation")
+    public String getPickupList(Model model, PageVo search, @RequestParam(required = false) String searchType_rs, @RequestParam(required = false) String searchValue_rs) throws Exception {
+        List<PickupDetailVo> pickup;
+        if (searchType_rs == null || searchValue_rs == null) {
+            pickup = pd.rsList();
+            log.info(pickup);
+        } else {
+            pickup = pd.rsList2(search, searchType_rs, searchValue_rs);
+            log.info(pickup);
+        }
+        model.addAttribute("pickup", pickup);
+        return "admin/admin_reservation";
+    }
+    // rs_페잉징
+    @PostMapping("/pagination_rs_page")
+    @ResponseBody
+    public List<PickupDetailVo> getPickupInfo(PageVo search, @RequestParam(required = false) String searchType_rs, @RequestParam(required = false) String searchValue_rs) {
+        List<PickupDetailVo> pickup;
+        if (searchType_rs == null || searchValue_rs == null) {
+            pickup = pd.rsList();
+
+        } else {
+            pickup = pd.rsList2(search, searchType_rs, searchValue_rs);
+
+        }
+        log.info(">>>>>>>>>>>>>"+pickup);
+        return pickup;
+    }
+
+    // 예약정보상세
+    @GetMapping("/rs_info")
+    public String rsDetail(Model model, PickupDetailVo  pickupDetailVo ) {
+        PickupDetailVo rs_info = pd.rs_info(pickupDetailVo.getPu_no());
+        model.addAttribute("rs_info", rs_info);
+        log.info(rs_info);
+        return "admin/admin_rs_info";
+    }
+
+
+    @GetMapping("/img/product/{img_save_name}")
+    @ResponseBody
+    public ResponseEntity<Resource> getImage(@PathVariable("img_save_name") String imgSaveName) throws IOException {
+        Resource resource = new FileSystemResource("/home/ubuntu/greentopia2/img/product/" + imgSaveName);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
 
 }

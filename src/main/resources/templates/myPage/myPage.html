@@ -7,7 +7,6 @@
     <meta charset="UTF-8">
     <title> 마이 페이지 </title>
     <link rel="stylesheet" type="text/css" href="/css/myPage.css">
-    <script src="/js/admin_bbs1.js"></script>
     <script src="/js/myPage.js"></script>
 </head>
 <body>
@@ -25,7 +24,7 @@
                     <input type="file" id="profile_img" style="display: none;">
                 </div>
 
-                <div style=" width: 100%; height: 101px; margin-left: 30%; display: flex; flex-direction: column; align-items: center;" th:if="${profileImgVo} == null">
+                <div style=" width: 100%; height: 101px; display: flex; flex-direction: column; align-items: center;" th:if="${profileImgVo} == null">
                     <img src="/img/유저.png" id="pro_img" style="width: 110px; border-radius: 60%; cursor:pointer;" data-toggle="modal" data-target="#exampleModal">
                     <input type="file" id="profile_img" style="display: none;">
                 </div>
@@ -131,21 +130,21 @@
                                         </th>
                                         <th style="width:12%;">예약번호</th>
                                         <th>날짜</th>
-                                        <th>종류</th>
-                                        <th>포인트</th>
-                                        <th style="width: 20%;">예약상황</th>
+                                        <th>아이디</th>
+                                        <th>메모</th>
+                                        <th style="width: 20%;">포인트</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
+                                    <tr th:each="pickList : ${pdv}">
                                         <td>
                                             <input type="checkbox" class="checkbox_item" style="margin-top: 7px;">
                                         </td>
-                                        <td>2</td>
-                                        <td>2023-04-01</td>
-                                        <td>가전</td>
-                                        <td>1300p</td>
-                                        <td>수거완료</td>
+                                        <td th:text="${pickList.pu_no}"></td>
+                                        <td th:text="${pickList.pu_day}"></td>
+                                        <td th:text="${pickList.user_id}"></td>
+                                        <td th:text="${pickList.pu_memo}"></td>
+                                        <td th:text="${pickList.give_point}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -208,12 +207,12 @@
                                                 <th style="width: 20%;">작성일</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody th:each="bvlist : ${bv}">
                                             <tr>
-                                                <td>1</td>
-                                                <td>파이팅55555555555555555555555555555555555555555555555555</td>
-                                                <td>test1</td>
-                                                <td>04-05</td>
+                                                <td th:text="${bvlist.board_num}"></td>
+                                                <td th:text="${bvlist.board_title}"></td>
+                                                <td th:text="${bvlist.user_id}"></td>
+                                                <td th:text="${#temporals.format(bvlist.board_date, 'yyyy-MM-dd')}"></td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -237,11 +236,11 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>헉5555555555555555555555555555555555555555</td>
-                                                <td>test1</td>
-                                                <td>04-05</td>
+                                            <tr th:each="cvList : ${cv}">
+                                                <td th:text="${cvList.com_num}"></td>
+                                                <td th:text="${cvList.com_content}"></td>
+                                                <td th:text="${cvList.user_id}"></td>
+                                                <td th:text="${cvList.com_date}"></td>
                                             </tr>
                                             </tbody>
                                         </table>

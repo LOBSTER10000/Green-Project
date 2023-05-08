@@ -7,7 +7,8 @@
     <meta charset="UTF-8">
     <title> 내가 쓴 글 </title>
     <link rel="stylesheet" href="/css/myPage/myWrite.css" type="text/css">
-    <script src="/js/admin_bbs1.js"></script>
+    <script src="/js/myWrite.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 <div layout:fragment="content" style="text-align: left;">
@@ -18,14 +19,15 @@
             <p style="font-size: 26px; font-weight: 700; letter-spacing: -2px; color: #0F4229;">내가 쓴 글</p>
 
             <div id="greenBox">
-                <form action="" method="post">
+
                     <!-- 검색 -->
                     <div class="no-gutters" style="display: flex;">
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <label for="search-type" hidden>검색 유형</label>
                             <select class="form-control" id="search-type" name="searchType">
-                                <option>제목</option>
-                                <option>작성일</option>
+                                <option selected disabled value="">검색유형</option>
+                                <option th:value="board_title">제목</option>
+                                <option th:value="user_id">작성자</option>
                             </select>
                         </div>
                         <div class="col-lg-8 col-md-6 col-sm-12 p-0">
@@ -34,7 +36,7 @@
                                    name="searchValue">
                         </div>
                         <div class="col-lg-1 col-md-3 col-sm-12 p-0">
-                            <button type="submit" class="btn btn-base">
+                            <button type="submit" class="btn btn-base submitBtn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                      stroke-linecap="round" stroke-linejoin="round"
@@ -58,32 +60,55 @@
                             <th style="width: 20%;">작성일</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr style="text-align: center; width: 100%;">
+                        <tbody id="t_body">
+                        <tr style="text-align: center; width: 100%;" th:each="bvList : ${bv}">
                             <td><input type="checkbox" class="checkbox_item"></td>
-                            <td>1</td>
-                            <td><a href="#"
-                                   style="color: black;">파이팅55555555555555555555555555555555555555555555555555</a></td>
-                            <td>test1</td>
-                            <td>04-05</td>
+                            <td th:text="${bvList.board_num}">1</td>
+                            <td><a th:href="@{/boardDetail(board_num=${bvList.board_num})}"
+                                   style="color: black;" th:utext="${bvList.board_title}">파이팅55555555555555555555555555555555555555555555555555</a></td>
+                            <td th:utext="${bvList.user_id}">test1</td>
+                            <td th:utext="${#temporals.format(bvList.board_date, 'yyyy-MM-dd HH:mm')}">04-05</td>
                         </tr>
                         </tbody>
                     </table>
 
-                </form>
 
                 <!-- 페이징 -->
 
                 <div class="row" style="margin-top: 5%;">
-                    <nav id="pagination" aria-label="Page navigation">
+                    <!----- 페이징 ----->
+                    <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item"><a class="page-link" href="#">이전</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">다음</a></li>
+                            <li class="page-item" id="pagingul">
+
+                            </li>
                         </ul>
                     </nav>
                 </div>
+                <script>
+                    $('.submitBtn').click(function () {
+                        let type = $('select[name=searchType]').val();
+                        let value = $('input[name=searchValue]').val();
 
+                        $.ajax({
+                            url: '/pagination_myWrite', // 데이터를 가져올 URL_
+                            type: 'post', // HTTP 요청 방법(Method)을 POST로 변경
+                            dataType: "json",
+                            data: {"searchType": type, "searchValue": value},
+                            success: function (data) { // 데이터를 가져온 후 실행할 콜백 함수
+                                console.log(data); // 데이터 확인용
+                                content = data;
+                                console.log("데이터" + data);
+                                getData(1);
+                                console.log("타입" + type);
+                                console.log("밸류" + value);
+                            },
+                            error: function (e) {
+                                console.log("ERROR: ", e);
+                            }
+                        });
+                    });
+                </script>
             </div>
 
         </div>

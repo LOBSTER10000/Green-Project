@@ -66,10 +66,8 @@
     </update>
 
     <select id="selectAll" resultType="com.sunny.green.vo.UserVo">
-        SELECT *
-        FROM user;
+        SELECT * FROM user;
     </select>
-
 
     <select id="selectAll2" resultType="com.sunny.green.vo.UserVo">
         SELECT *
@@ -88,6 +86,4 @@
         </where>
     </select>
 
-
 </mapper>
-

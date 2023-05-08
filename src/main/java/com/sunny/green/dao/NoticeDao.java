@@ -1,6 +1,7 @@
 package com.sunny.green.dao;
 
 import com.sunny.green.vo.NoticeVo;
+import com.sunny.green.vo.PageVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +19,15 @@ public interface NoticeDao {
 
     public int updateNotice(NoticeVo notice);
 
-    public int deleteBoard(int notice_num);
+    public int deleteNotice(int notice_num);
+
+    public int updateNoticeNum();
+
+    public List<NoticeVo> selectMainNotice();
+
+    public List<NoticeVo> selectAllNotice();
+
+    public List<NoticeVo> searchNotice(PageVo search, String searchType, String searchValue);
+
+    public List<NoticeVo> myPageNotice(String user_Id);
 }
