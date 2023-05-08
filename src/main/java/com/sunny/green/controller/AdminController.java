@@ -81,7 +81,9 @@ public class AdminController {
     }
 
     @GetMapping("/admin/user2")
-    public String getUserList(Model model, PageVo search, @RequestParam(required = false) String searchType, @RequestParam(required = false) String searchValue) throws Exception {
+    public String getUserList(Model model, PageVo search
+            , @RequestParam(required = false) String searchType
+            , @RequestParam(required = false) String searchValue) throws Exception {
         List<UserVo> user;
         if (searchType == null || searchValue == null) {
             user = ud.selectAll();
