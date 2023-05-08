@@ -58,10 +58,17 @@
         </where>
     </select>
 
-    <!--    예약자상세조회-->
+<!--    &lt;!&ndash;    예약자상세조회&ndash;&gt;-->
+<!--    <select id="rs_info" resultType="com.sunny.green.vo.PickupDetailVo">-->
+<!--        SELECT * FROM pickup_info LEFT JOIN pickup_address ON pickup_info.pu_address_no = pickup_address.pu_address_no-->
+<!--        JOIN pickup_img ON pickup_info.pu_no = pickup_img.pu_no where pickup_info.pu_no=#{pu_no} and pickup_info.pu_address_no=#{pu_address_no};-->
+<!--    </select>-->
+
+
+    <!-- 예약자상세조회 (img없이 예약자 정보만 상세 조회 -->
     <select id="rs_info" resultType="com.sunny.green.vo.PickupDetailVo">
-        SELECT * FROM pickup_info LEFT JOIN pickup_address ON pickup_info.#{pu_address_no} = pickup_address.#{pu_address_no}
-        JOIN pickup_img ON pickup_info.#{pu_no} = pickup_img.#{pu_no};
+        SELECT * FROM pickup_info JOIN pickup_address ON pickup_info.pu_address_no = pickup_address.pu_address_no where pickup_info.pu_address_no=#{pu_address_no};
     </select>
+
 
 </mapper>

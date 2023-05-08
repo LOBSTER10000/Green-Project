@@ -214,7 +214,7 @@ public class AdminController {
 //   ---------------------------------- rs
 
 
-    // rs_검색 및 데이터 불러오기
+    //rs_검색 및 데이터 불러오기
     @GetMapping("/admin/reservation")
     public String getPickupList(Model model, PageVo search, @RequestParam(required = false) String searchType_rs, @RequestParam(required = false) String searchValue_rs) throws Exception {
         List<PickupDetailVo> pickup;
@@ -231,13 +231,13 @@ public class AdminController {
     // rs_페잉징
     @PostMapping("/pagination/rs_page")
     @ResponseBody
-    public List<PickupDetailVo> getPickupInfo(PageVo search, @RequestParam(required = false) String searchType_rs, @RequestParam(required = false) String searchValue_rs) {
+    public List<PickupDetailVo> getPickupInfo(PageVo search, @RequestParam(required = false) String searchType, @RequestParam(required = false) String searchValue) {
         List<PickupDetailVo> pickup;
-        if (searchType_rs == null || searchValue_rs == null) {
+        if (searchType == null || searchValue == null) {
             pickup = pd.rsList();
             log.info("제발 되주십시오" + pickup);
         } else {
-            pickup = pd.rsList2(search, searchType_rs, searchValue_rs);
+            pickup = pd.rsList2(search, searchType, searchValue);
             log.info("되나?1" + pickup);
         }
         System.out.println(">>>>>>>>>>>>>"+pickup);
@@ -247,11 +247,14 @@ public class AdminController {
     // 예약정보상세
     @GetMapping("/rs_info")
     public String rsDetail(Model model, PickupDetailVo  pickupDetailVo ) {
+        log.info(pickupDetailVo);
         PickupDetailVo rs_info = pd.rs_info(pickupDetailVo.getPu_no(),pickupDetailVo.getPu_address_no());
         model.addAttribute("rs_info", rs_info);
         log.info(rs_info);
         return "admin/admin_rs_info";
     }
+
+
 
     @GetMapping("/img/product/{img_save_name}")
     @ResponseBody

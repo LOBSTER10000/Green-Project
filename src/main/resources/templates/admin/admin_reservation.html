@@ -102,10 +102,10 @@
 
             //페이징처리 ----
             let totalPage = Math.ceil(content.length / itemsPerPage);  // 총 페이지 수
-            // pageLink(현재페이지, 전체페이지, 호출할 함수이름)  // --------- 해결해야함 !!
+            // pageLink(현재페이지, 전체페이지, 호출할 함수이름)
             let htmlStr = pageLink(currentPage, totalPage, "getData");
             // common.js - pageLink
-            $("#div_paginate").html(htmlStr);  // --------- 해결해야함 !!
+            $("#div_paginate").html(htmlStr);
 
             $('#t_body').empty();
             // 데이터를 테이블에 추가
@@ -113,13 +113,14 @@
                 if (i >= startIndex && i < endIndex) {
                     userTable.append(
                         '<tr>' +
-                        '<td><a href="/rs_info?pu_no=' + item.pu_no + '">' + item.pu_no + '</td>' +
-                        '<td>' + item.pu_address_no + '</td>' +
-                        '<td>' + item.user_id + '</td>' +
+                        '<td><a href="/rs_info?pu_no=' + item.pu_no + '&pu_address_no='+item.pu_address_no+' ">' + item.pu_no + '</a></td>'+
+                        '<td>' + item.pu_address_zip + '</td>' +
+                        '<td>' + item.user_id+ '</td>' +
                         '<td>' + item.pu_day + '</td>' +
                         '<td>' + item.pu_memo + '</td>' +
                         '<td>' + item.pu_date + '</td>' +
                         '</tr>'
+
                     );
                 }
             });
@@ -140,17 +141,17 @@
 
     <br>
     <div class="search-form" style="display: flex;">
-            <div class="col" style="display: flex;">
-                <select class="form-select" name="searchType_rs" id="validationCustom04" required >
-                    <option selected disabled value="">검색유형</option>
-                    <option th:value="pu_day"> 픽업날짜 </option>
-                    <option th:value="pu_date"> 접수날짜 </option>
-                    <option th:value="user_id" > 회원아이디 </option>
-                </select>
-                <div class="invalid-feedback">
-                    Please select a valid state.
-                </div>
+        <div class="col" style="display: flex;">
+            <select class="form-select" name="searchType_rs" id="validationCustom04" required >
+                <option selected disabled value="">검색유형</option>
+                <option th:value="pu_day"> 픽업날짜 </option>
+                <option th:value="pu_date"> 접수날짜 </option>
+                <option th:value="user_id" > 회원아이디 </option>
+            </select>
+            <div class="invalid-feedback">
+                Please select a valid state.
             </div>
+        </div>
         <div class="col-lg-8 col-md-6 col-sm-12 p-0">
             <input type="text" placeholder="검색어..." class="form-control"
                    name="searchValue_rs">
@@ -187,12 +188,12 @@
             <tbody id="t_body">
             <tr th:each="list: ${pickup}" style="word-break: keep-all; vertical-align: middle;" >
 
-                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
-                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
-                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
-                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
-                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
-                <td th:text="${list.pu_no}" th:value="${list.pu_no}"></td>
+                <td><a th:href="@{/rs_info(pu_no=${list.pu_no})}" th:text="${list.pu_no}"></a></td>
+                <td th:text="${list.pu_address_zip}" th:value="${list.pu_address_zip}"></td>
+                <td th:text="${list.user_id}" th:value="${list.user_id}"></td>
+                <td th:text="${list.pu_day}" th:value="${list.pu_day}"></td>
+                <td th:text="${list.pu_memo}" th:value="${list.pu_memo}"></td>
+                <td th:text="${list.pu_date}" th:value="${list.pu_date}"></td>
 
             </tr>
             </tbody>
